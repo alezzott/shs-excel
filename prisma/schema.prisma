@@ -17,7 +17,7 @@ model excel_items {
   id          Int      @id @default(autoincrement())
   code        String   @default("") @db.VarChar(64)
   description String   @default("") @db.VarChar(255)
-  quantity    Decimal  @default(0.0) @db.Decimal(18, 6)
+  quantity    Int      @default(0)
   price       Decimal  @default(0.0) @db.Decimal(18, 6)
   total_price Decimal  @default(0.0) @db.Decimal(18, 6)
   created_at  DateTime @default(now())
