@@ -1,6 +1,7 @@
 import client from '../lib/prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 import {
+   handeGetPaginationParams,
    handleGetExcelItems,
    handleRemoveExcelItemById,
    handleUpdateExcelItems,
@@ -33,7 +34,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       if (!isValidExcelFile(fileExtension)) {
          return respondWithError('Only excel files (.xls or.xlsx)', 500)
       }
-      console.log(file.name, fileExtension)
       await handleUploadExcel(file)
       return NextResponse.json({ message: 'Upload completo' }, { status: 201 })
    } catch (error) {
@@ -55,7 +55,6 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
       })
 
       if (!itemExists) {
-         console.log('item não encontrado')
          return respondWithError('ID not found', 404)
       }
 
@@ -76,18 +75,26 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
    }
 }
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: NextRequest): Promise<NextResponse> {
    try {
-      const items = await handleGetExcelItems()
+      const url = new URL(request.url)
+      const { page, limit } = handeGetPaginationParams(url)
+      const { items, totalItems } = await handleGetExcelItems({ page, limit })
       return NextResponse.json(
          {
             message: 'Success !',
             items,
+            pagination: {
+               totalItems,
+               page,
+               limit,
+               totalPages: Math.ceil(totalItems / limit),
+            },
          },
          { status: 200 }
       )
    } catch (error) {
-      return respondWithError('Error get items', 404)
+      return respondWithError('Error get excel items', 500)
    }
 }
 
