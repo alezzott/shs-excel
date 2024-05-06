@@ -8,3 +8,9 @@ interface Excel {
    created_at: Date
    updated_at: Date
 }
+
+interface ExcelProps {
+   totalItems: number
+   items: Excel[]
+   pagination: any
+}

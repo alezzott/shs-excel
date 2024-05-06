@@ -21,8 +21,6 @@ export async function SaveExcelDataToDatabase(data: any[]) {
    await client.excel_items.createMany({
       data: transformedData,
    })
-   console.log('Dados lidos do Excel:', data)
-   console.log('Dados transformados:', transformedData)
 }
 
 export async function processExcelData(buffer: Buffer): Promise<void> {
