@@ -1,0 +1,19 @@
+.text-footer-item {
+    text-align: right;
+    color: #252525;
+    font-size: 12px;
+
+    h1 {
+        font-weight: 500;
+    }
+
+    a {
+        font-weight: 600;
+        color: #22c55e;
+
+        &:hover {
+            color: red;
+        }
+    }
+
+}
