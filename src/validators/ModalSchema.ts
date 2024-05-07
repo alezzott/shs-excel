@@ -1,20 +1,30 @@
 import { z } from 'zod'
 
-export const ModalSchema = z.object({
-   description: z.string().refine((value) => value.trim().length > 0, {
-      message:
-         'Descrição é obrigatória e não pode conter apenas espaços em branco',
-   }),
+export const modalSchema = z.object({
+   description: z.string().min(1, 'Descrição é obrigatória'),
    quantity: z
       .number()
-      .int()
-      .nonnegative(
-         'Quantidade é obrigatória e deve ser um número inteiro não negativo'
+      .nullable()
+      .refine(
+         (value) => {
+            return typeof value === 'number' && Number.isInteger(value)
+         },
+         {
+            message: 'Quantidade é obrigatória',
+         }
       ),
    price: z
-      .number()
-      .int()
-      .nonnegative(
-         'Preço é obrigatória e deve ser um número inteiro não negativo'
+      .union([z.number(), z.string()])
+      .nullable()
+      .refine(
+         (value) => {
+            return (
+               typeof value === 'number' ||
+               (typeof value === 'string' && !isNaN(parseFloat(value)))
+            )
+         },
+         {
+            message: 'O preço é obrigatório',
+         }
       ),
 })
