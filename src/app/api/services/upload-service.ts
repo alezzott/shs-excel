@@ -1,5 +1,6 @@
 import { processExcelData } from '../utils/ProcessExcelData'
 import client from '../lib/prisma/client'
+import dayjs from 'dayjs'
 
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 10
@@ -19,9 +20,22 @@ export async function handleUpdateExcelItems(
       updated_at: Date
    }>
 ) {
+   const currentItem = await client.excel_items.findUnique({
+      where: { id: id },
+   })
+
+   if (!currentItem) {
+      throw new Error('Item not found')
+   }
+
+   const { quantity = currentItem.quantity, price = currentItem.price }: any =
+      updates
+
+   const total_price = quantity * price
+
    const updateExcel = await client.excel_items.update({
       where: { id: id },
-      data: updates,
+      data: { ...updates, total_price },
    })
 
    return updateExcel
@@ -47,12 +61,21 @@ export async function handleGetExcelItems({ page, limit }: any): Promise<{
    const items = await client.excel_items.findMany({
       skip: offset,
       take: limit,
+      orderBy: {
+         updated_at: 'desc',
+      },
    })
+
+   const formattedItems = items.map((item) => ({
+      ...item,
+      created_at: dayjs(item.created_at).format('DD/MM/YYYY HH:mm:ss'),
+      updated_at: dayjs(item.updated_at).format('DD/MM/YYYY HH:mm:ss'),
+   }))
 
    const totalItems = await client.excel_items.count()
 
    return {
-      items,
+      items: formattedItems,
       totalItems,
       page,
       limit,
