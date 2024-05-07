@@ -1,6 +1,7 @@
 import { InboxOutlined } from '@ant-design/icons'
 import type { UploadProps } from 'antd'
 import { Upload, message } from 'antd'
+import styles from './Upload.module.scss'
 
 export function UploadItem() {
    const { Dragger } = Upload
@@ -29,20 +30,22 @@ export function UploadItem() {
    }
 
    return (
-      <Dragger {...props}>
-         <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-         </p>
-         <p className="ant-upload-text">
-            Selecione ou Arraste os arquivos para cá.
-         </p>
-         <p className="ant-upload-hint" style={{ fontWeight: 600 }}>
-            Importe um ou mais arquivos.{' '}
-            <span style={{ color: '#be1522', fontWeight: 600 }}>
-               Apenas arquivos em formato do excel (.xls e/ou .xlsx) são
-               aceitos.
-            </span>
-         </p>
-      </Dragger>
+      <section className={styles['upload-item']}>
+         <Dragger {...props}>
+            <p className="ant-upload-drag-icon">
+               <InboxOutlined style={{ color: '#22c55e' }} />
+            </p>
+            <p className="ant-upload-text">
+               Selecione ou Arraste os arquivos para cá.
+            </p>
+            <p className="ant-upload-hint" style={{ fontWeight: 600 }}>
+               Importe um ou mais arquivos.{' '}
+               <span style={{ color: '#be1522', fontWeight: 600 }}>
+                  Apenas arquivos em formato do excel (.xls e/ou .xlsx) são
+                  aceitos.
+               </span>
+            </p>
+         </Dragger>
+      </section>
    )
 }

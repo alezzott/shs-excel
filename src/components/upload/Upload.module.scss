@@ -1,0 +1,8 @@
+.upload-item {
+    width: 50%;
+    margin: auto;
+
+    @media (max-width: '991px') {
+        width: 100%
+    }
+}
