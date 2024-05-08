@@ -9,6 +9,26 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
    title: 'MedFileX',
    description: 'Importe seus arquivos do excel e gerencie em tabelas',
+   keywords: ['Next.js', 'React', 'JavaScript', 'TypeScript'],
+   applicationName: 'MedFileX',
+   openGraph: {
+      locale: 'pt_BR',
+      type: 'website',
+      url: 'https://shs.vercel.app',
+      images: [
+         {
+            url: '../../public/assets/og.png',
+            width: 800,
+            height: 600,
+         },
+         {
+            url: '../../public/assets/og.png',
+            width: 1800,
+            height: 1600,
+            alt: 'My custom alt',
+         },
+      ],
+   },
 }
 
 export default function RootLayout({
