@@ -31,21 +31,23 @@ export function UploadItem() {
 
    return (
       <section className={styles['upload-item']}>
-         <Dragger {...props}>
-            <p className="ant-upload-drag-icon">
-               <InboxOutlined style={{ color: '#22c55e' }} />
-            </p>
-            <p className="ant-upload-text">
-               Selecione ou Arraste os arquivos para cá.
-            </p>
-            <p className="ant-upload-hint" style={{ fontWeight: 600 }}>
-               Importe um ou mais arquivos.{' '}
-               <span style={{ color: '#be1522', fontWeight: 600 }}>
-                  Apenas arquivos em formato do excel (.xls e/ou .xlsx) são
-                  aceitos.
-               </span>
-            </p>
-         </Dragger>
+         <form encType="multipart/form-data">
+            <Dragger {...props}>
+               <p className="ant-upload-drag-icon">
+                  <InboxOutlined style={{ color: '#22c55e' }} />
+               </p>
+               <p className="ant-upload-text">
+                  Selecione ou Arraste os arquivos para cá.
+               </p>
+               <p className="ant-upload-hint" style={{ fontWeight: 600 }}>
+                  Importe um ou mais arquivos.{' '}
+                  <span style={{ color: '#be1522', fontWeight: 600 }}>
+                     Apenas arquivos em formato do excel (.xls e/ou .xlsx) são
+                     aceitos.
+                  </span>
+               </p>
+            </Dragger>
+         </form>
       </section>
    )
 }

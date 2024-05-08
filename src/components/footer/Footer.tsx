@@ -2,13 +2,17 @@ import style from './Footer.module.scss'
 
 export const FooterComponent = () => {
    return (
-      <section className={style['text-footer-item']}>
-         <h1>
+      <footer className={style['text-footer-item']}>
+         <p>
             Feito por{' '}
-            <a href="https://github.com/alezzott" target="_blank">
+            <a
+               href="https://github.com/alezzott"
+               target="_blank"
+               rel="noopener noreferrer"
+            >
                Alezzo
             </a>
-         </h1>
-      </section>
+         </p>
+      </footer>
    )
 }

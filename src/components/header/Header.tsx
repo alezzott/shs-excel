@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import style from './Header.module.scss'
-import bannerHome from '../../assets/banner-home.svg'
+import bannerHome from '../../../public/assets/banner-home.svg'
 
 export const HeaderComponent = () => {
    return (
-      <section className={style['text-header-section']}>
+      <header className={style['text-header-section']}>
          <section>
             <h1>MedFileX</h1>
             <p>
@@ -19,6 +19,6 @@ export const HeaderComponent = () => {
                draggable={false}
             />
          </section>
-      </section>
+      </header>
    )
 }
