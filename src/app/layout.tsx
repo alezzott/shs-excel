@@ -17,15 +17,15 @@ export const metadata: Metadata = {
       url: 'https://shs.vercel.app',
       images: [
          {
-            url: '../../public/assets/og.png',
+            url: 'https://raw.githubusercontent.com/alezzott/shs-excel/main/public/assets/og.png',
             width: 800,
             height: 600,
          },
          {
-            url: '../../public/assets/og.png',
+            url: 'https://raw.githubusercontent.com/alezzott/shs-excel/main/public/assets/og.png',
             width: 1800,
             height: 1600,
-            alt: 'My custom alt',
+            alt: 'open-graph alt',
          },
       ],
    },
