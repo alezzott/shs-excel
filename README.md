@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Projeto SHS-Excel
 
-## Getting Started
+## Sobre o Projeto
 
-First, run the development server:
+O projeto SHS-Excel é uma aplicação web que permite aos usuários fazer upload e processar arquivos Excel. Ele fornece funcionalidades para ler, validar e salvar dados de planilhas Excel.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tecnologias Utilizadas
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+-  **Next.js**: Framework principal para a construção da aplicação web.
+-  **Prisma**: ORM utilizado para operações de banco de dados.
+-  **React**: Biblioteca JavaScript para construção de interfaces de usuário.
+-  **Ant Design (antd)**: Biblioteca de componentes UI para React.
+-  **Axios**: Cliente HTTP para fazer requisições de API.
+-  **Dayjs**: Biblioteca para manipulação de datas.
+-  **React Hook Form**: Biblioteca para gerenciamento de estado e validação de formulários.
+-  **React Query**: Biblioteca para gerenciamento de estado do servidor em aplicações React.
+-  **XLSX**: Biblioteca para leitura e escrita de arquivos Excel.
+-  **Zod**: Biblioteca para validação de dados.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Como Iniciar o Projeto
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone o repositório:
+   ```
+   git clone https://github.com/alezzott/shs-excel.git
+   ```
+2. Instale as dependências:
 
-## Learn More
+   ```
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Inicie o servidor de desenvolvimento:
+   ```
+   npm run dev
+   ```
+   ou
+   ```
+   yarn dev
+   ```
+4. Acesse a aplicação em [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Caso queira executar os testes do projeto, siga os passos abaixo:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Certifique-se de que todas as dependências estão instaladas:
 
-## Deploy on Vercel
+   ```
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+2. Execute os testes:
+   ```
+   npm run test
+   ```
