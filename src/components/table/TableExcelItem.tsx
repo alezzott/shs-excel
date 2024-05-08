@@ -1,15 +1,27 @@
 'use client'
-import { Button, Pagination, Space, Spin, Table, TableProps } from 'antd'
+import {
+   Button,
+   Pagination,
+   Space,
+   Spin,
+   Table,
+   TableProps,
+   message,
+} from 'antd'
 import { DeleteTwoTone } from '@ant-design/icons'
 import { useFetch } from '@/hooks/useFetch'
-import { ModalDetailsItem } from './ModalDetailsItem'
+import { ModalDetailsItem } from '../modal/ModalDetailsItem'
 import { useState } from 'react'
 import { formatToBRL } from '@/app/api/utils/FormatCurrency'
 import { useDelete } from '@/hooks/useDelete'
+import { LoadingOutlined } from '@ant-design/icons'
+import styles from './Table.module.scss'
 
 export function TableExcelItem() {
    const [currentPage, setCurrentPage] = useState(1)
    const [pageSize, setPageSize] = useState(10)
+   const [messageApi, contextHolder] = message.useMessage()
+
    const { data: upload, isLoading, refetch } = useFetch(currentPage, pageSize)
    const deleteItemMutation = useDelete()
 
@@ -19,18 +31,30 @@ export function TableExcelItem() {
 
    const handleDeleteItem = (id: number) => {
       deleteItemMutation.mutate(id)
+      messageApi.open({
+         type: 'success',
+         content: 'Sucesso !',
+      })
    }
 
    if (isLoading) {
       return (
-         <Spin
-            style={{
-               textAlign: 'center',
-               display: 'flex',
-               justifyContent: 'center',
-            }}
-            size={'large'}
-         />
+         <>
+            <Spin
+               style={{
+                  textAlign: 'center',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingTop: '50px',
+               }}
+               indicator={
+                  <LoadingOutlined
+                     style={{ fontSize: 72, color: '#22c55e' }}
+                     spin
+                  />
+               }
+            />
+         </>
       )
    }
 
@@ -91,8 +115,11 @@ export function TableExcelItem() {
                   item={excel}
                   onUpdateSuccess={handleUpdateSuccess}
                />
-               <Button onClick={() => handleDeleteItem(excel.id)}>
-                  <DeleteTwoTone />
+               <Button
+                  onClick={() => handleDeleteItem(excel.id)}
+                  style={{ border: '1px solid #22c55e' }}
+               >
+                  <DeleteTwoTone twoToneColor="#22c55e" />
                </Button>
             </Space>
          ),
@@ -100,23 +127,27 @@ export function TableExcelItem() {
    ]
 
    return (
-      <Table
-         columns={columns}
-         dataSource={upload?.items}
-         pagination={false}
-         scroll={{ x: 'max-content' }}
-         footer={() => (
-            <Pagination
-               responsive={true}
-               current={currentPage}
-               pageSize={pageSize}
-               total={upload?.totalItems || 0}
-               onChange={(page, size) => {
-                  setCurrentPage(page)
-                  setPageSize(size)
-               }}
-            />
-         )}
-      />
+      <>
+         {contextHolder}
+         <Table
+            className={styles['table-content']}
+            columns={columns}
+            dataSource={upload?.items}
+            pagination={false}
+            scroll={{ x: 'max-content' }}
+            footer={() => (
+               <Pagination
+                  responsive={true}
+                  current={currentPage}
+                  pageSize={pageSize}
+                  total={upload?.totalItems || 0}
+                  onChange={(page, size) => {
+                     setCurrentPage(page)
+                     setPageSize(size)
+                  }}
+               />
+            )}
+         />
+      </>
    )
 }
