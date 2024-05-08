@@ -12,3 +12,21 @@
         padding-bottom: 30px;
     }
 }
+
+.download-item {
+    color: #252525;
+    text-align: center;
+    font-size: 18x;
+    margin-top: 40px;
+
+    display: flex;
+    justify-content: center;
+
+    a {
+        color: #252525;
+
+        &:hover {
+            color: #22c55e;
+        }
+    }
+}

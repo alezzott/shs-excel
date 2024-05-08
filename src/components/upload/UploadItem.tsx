@@ -1,7 +1,8 @@
 import { InboxOutlined } from '@ant-design/icons'
 import type { UploadProps } from 'antd'
-import { Upload, message } from 'antd'
+import { Button, Upload, message } from 'antd'
 import styles from './Upload.module.scss'
+import { DownloadOutlined } from '@ant-design/icons'
 
 export function UploadItem() {
    const { Dragger } = Upload
@@ -47,6 +48,26 @@ export function UploadItem() {
                   </span>
                </p>
             </Dragger>
+            <p className={styles['download-item']}>
+               Caso tem problemas ao importar o arquivo. Por favor, baixe o{' '}
+               <span style={{ color: '#22c55e', marginLeft: '5px' }}>
+                  {' '}
+                  Arquivo modelo
+               </span>
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+               <Button
+                  type="primary"
+                  shape="default"
+                  icon={<DownloadOutlined />}
+                  size={'large'}
+                  download="arquivo-modelo.xlsx"
+                  href="/assets/excel/arquivo-modelo.xls"
+                  style={{ backgroundColor: '#22c55e', fontSize: '18px' }}
+               >
+                  Baixe o arquivo
+               </Button>
+            </div>
          </form>
       </section>
    )
