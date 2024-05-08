@@ -19,9 +19,8 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: any) {
    const { mutateAsync: updateMutation, isLoading } = usePatch()
    const {
       control,
-
       handleSubmit,
-      formState: { errors },
+      formState: { errors, isDirty },
    } = useForm<ModalSchema>({
       resolver: zodResolver(modalSchema),
    })
@@ -63,6 +62,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: any) {
             onOk={handleSubmit(handleUpdate)}
             confirmLoading={isLoading}
             onCancel={() => setOpen(false)}
+            okButtonProps={{ disabled: !isDirty }}
          >
             <Form
                scrollToFirstError
@@ -120,12 +120,11 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: any) {
                   <InputNumberComponent
                      control={control}
                      name="price"
-                     label="Price"
+                     label="Preço"
                      placeholder="Price"
-                     defaultValue={formatToBRL(item.price || 0)}
+                     defaultValue={item.price}
                      error={errors.price}
                      style={{ width: '100%' }}
-                     disabled={false}
                      status={errors.price && 'error'}
                   />
 
@@ -134,7 +133,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: any) {
                      name="total_price"
                      label="Preço Total"
                      placeholder="Preço Total"
-                     defaultValue={formatToBRL(item.total_price)}
+                     defaultValue={formatToBRL(item.total_price || 0)}
                      disabled={true}
                   />
                </div>
