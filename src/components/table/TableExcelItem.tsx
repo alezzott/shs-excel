@@ -30,10 +30,14 @@ export function TableExcelItem() {
    }
 
    const handleDeleteItem = (id: number) => {
-      deleteItemMutation.mutate(id)
-      messageApi.open({
-         type: 'success',
-         content: 'Sucesso !',
+      deleteItemMutation.mutate(id, {
+         onSuccess: () => {
+            messageApi.open({
+               type: 'success',
+               content: 'Sucesso !',
+            })
+            refetch()
+         },
       })
    }
 
