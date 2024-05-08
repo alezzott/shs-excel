@@ -1,18 +1,18 @@
 import { Form, InputNumber } from 'antd'
-import { Controller } from 'react-hook-form'
+import { Rule } from 'antd/es/form'
+import { Controller, FieldError } from 'react-hook-form'
 
 interface InputNumberProps {
-   control: any
+   control?: any
    name: string
    label: string
    placeholder?: string
    defaultValue?: any
-   rules?: boolean | any
-   error?: any
+   rules?: Rule[]
+   error?: FieldError
    min?: number
    style?: React.CSSProperties
    disabled?: boolean
-   status?: any
 }
 
 export const InputNumberComponent = ({

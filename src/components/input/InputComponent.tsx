@@ -1,15 +1,16 @@
 import { Form, Input } from 'antd'
+import { Rule } from 'antd/es/form'
 import React from 'react'
-import { Controller } from 'react-hook-form'
+import { Controller, FieldError } from 'react-hook-form'
 
 interface InputProps {
-   control: any
+   control?: any
    name: string
    label: string
    placeholder?: string
    defaultValue?: any
-   rules?: boolean | any
-   error?: any
+   rules?: Rule[]
+   error?: FieldError
    min?: number
    style?: React.CSSProperties
    disabled?: boolean

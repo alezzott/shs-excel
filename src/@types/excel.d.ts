@@ -10,7 +10,8 @@ interface Excel {
 }
 
 interface ExcelProps {
-   totalItems: number
    items: Excel[]
-   pagination: any
+   pagination: {
+      totalItems: number
+   }
 }

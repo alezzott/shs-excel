@@ -13,7 +13,12 @@ import styles from './Modal.module.scss'
 
 type ModalSchema = z.infer<typeof modalSchema>
 
-export function ModalDetailsItem({ item, onUpdateSuccess }: any) {
+interface ModalProps {
+   item: Excel
+   onUpdateSuccess: () => void
+}
+
+export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
    const [open, setOpen] = useState(false)
    const [messageApi, contextHolder] = message.useMessage()
    const { mutateAsync: updateMutation, isLoading } = usePatch()
@@ -114,7 +119,6 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: any) {
                      error={errors.quantity}
                      style={{ width: '100%' }}
                      disabled={false}
-                     status={errors.quantity && 'error'}
                   />
 
                   <InputNumberComponent
@@ -125,7 +129,6 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: any) {
                      defaultValue={item.price}
                      error={errors.price}
                      style={{ width: '100%' }}
-                     status={errors.price && 'error'}
                   />
 
                   <InputComponent
