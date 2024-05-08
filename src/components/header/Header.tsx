@@ -17,6 +17,7 @@ export const HeaderComponent = () => {
                src={bannerHome}
                alt="banner home section"
                draggable={false}
+               priority={true}
             />
          </section>
       </header>
