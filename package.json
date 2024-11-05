@@ -14,7 +14,7 @@
     "@prisma/client": "^5.13.0",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "antd": "^5.16.5",
-    "axios": "^1.6.8",
+    "axios": "^1.7.4",
     "dayjs": "^1.11.11",
     "next": "14.2.10",
     "react": "^18",
