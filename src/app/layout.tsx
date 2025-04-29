@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { Content, Footer } from 'antd/es/layout/layout'
+
 import { FooterComponent } from '@/components/footer/Footer'
 import { HeaderComponent } from '@/components/header/Header'
+
+import '@/app/globals.css'
+import { Toaster } from '@/components/ui/sonner'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -43,11 +46,12 @@ export default function RootLayout({
             style={{ backgroundColor: '#f7f7f7', margin: '0 auto' }}
          >
             <link rel="icon" href="./favicon.png" sizes="any" />
-            <HeaderComponent />
-            <Content style={{ margin: '50px 30px' }}>{children}</Content>
-            <Footer>
+            {/* <HeaderComponent /> */}
+            <div className="@container">{children}</div>
+            {/* <Footer>
                <FooterComponent />
-            </Footer>
+            </Footer> */}
+            <Toaster richColors expand={true} />
          </body>
       </html>
    )
