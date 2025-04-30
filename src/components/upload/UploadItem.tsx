@@ -1,8 +1,9 @@
-import { Fragment, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Inbox, Download, Paperclip, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { Progress } from '../ui/progress'
+import Link from 'next/link'
 
 export function UploadItem() {
    const inputRef = useRef<HTMLInputElement>(null)
@@ -39,7 +40,7 @@ export function UploadItem() {
       const INTERVAL_PROGRESS = 500 // Atualiza a cada 0.5s
       let elapsed = 0
 
-      const TIMER = setInterval(() => {
+      timerRef.current = setInterval(() => {
          elapsed += INTERVAL_PROGRESS
          setProgress(
             Math.min(100, Math.round((elapsed / DURATION_PROGRESS) * 100))
@@ -86,17 +87,33 @@ export function UploadItem() {
    }
 
    return (
-      <section className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
+      <section
+         className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow p-6"
+         aria-labelledby="upload-section-title"
+      >
          <form encType="multipart/form-data">
             <label
                htmlFor="upload-input"
-               className={`flex flex-col items-center justify-center border-2 border-dashed rounded-lg cursor-pointer transition-colors min-h-[220px] ${dragActive ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-gray-50'} `}
+               aria-disabled={uploading}
+               className={`
+                  flex flex-col items-center justify-center border-2 border-dashed rounded-lg transition-colors min-h-[220px]
+                  ${dragActive ? 'border-green-500 bg-green-50' : 'border-gray-300 bg-gray-50'}
+                  ${uploading ? 'opacity-60 cursor-not-allowed bg-gray-100 border-gray-300' : 'cursor-pointer'}
+                  focus:outline-none focus:ring-2 focus:ring-green-500
+               `}
                onDragEnter={handleDrag}
                onDragLeave={handleDrag}
                onDragOver={handleDrag}
                onDrop={handleDrop}
+               aria-label="Área para selecionar ou arrastar arquivos do Excel"
             >
-               <Inbox className="w-12 h-12 text-green-500 mb-2" />
+               <Inbox
+                  className="w-12 h-12 text-green-500 mb-2"
+                  aria-hidden="true"
+               />
+               <h2 id="upload-section-title" className="sr-only">
+                  Upload de Arquivos Excel
+               </h2>
                <p className="font-medium text-gray-700">
                   Selecione ou arraste os arquivos para cá.
                </p>
@@ -117,10 +134,12 @@ export function UploadItem() {
                   className="hidden"
                   onChange={handleChange}
                   disabled={uploading}
+                  aria-disabled={uploading}
+                  aria-label="Selecionar arquivos para upload"
                />
             </label>
             {selectedFiles.length > 0 && (
-               <div className="mt-4">
+               <div className="mt-8" role="status" aria-live="polite">
                   <p className="font-semibold text-gray-700 mb-2">
                      Arquivos selecionados:
                   </p>
@@ -131,11 +150,19 @@ export function UploadItem() {
                            className="flex items-center justify-between"
                         >
                            <article className="flex flex-row gap-3">
-                              <Paperclip className="w-5 h-5 text-green-500" />
+                              <Paperclip
+                                 className="w-5 h-5 text-green-500"
+                                 aria-hidden="true"
+                              />
                               <span
                                  className={`truncate ${uploadCanceled ? 'text-red-600' : 'text-gray-800'}`}
                               >
                                  {file.name}
+                                 {uploadCanceled && (
+                                    <span className="ml-2 text-xs text-red-600 font-semibold">
+                                       (Upload cancelado)
+                                    </span>
+                                 )}
                               </span>
                            </article>
                            <article>
@@ -144,6 +171,7 @@ export function UploadItem() {
                                     <Progress
                                        className="w-80"
                                        value={progress}
+                                       aria-label="Progresso do upload"
                                     />
                                     <Button
                                        size="icon"
@@ -151,9 +179,13 @@ export function UploadItem() {
                                        onClick={handleCancel}
                                        disabled={!uploading}
                                        title="Cancelar upload"
-                                       className="hover:cursor-pointer"
+                                       aria-label="Cancelar upload"
+                                       className="hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500"
                                     >
-                                       <X className="w-5 h-5 text-red-500" />
+                                       <X
+                                          className="w-5 h-5 text-red-500"
+                                          aria-hidden="true"
+                                       />
                                     </Button>
                                  </section>
                               )}
@@ -170,19 +202,20 @@ export function UploadItem() {
                   Arquivo modelo
                </span>
             </p>
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-center mt-5">
                <Button
                   asChild
-                  size="lg"
-                  className="bg-green-500 hover:bg-green-600 text-white text-lg"
+                  size="default"
+                  className="bg-green-500 hover:bg-green-600 text-white text-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  aria-label="Baixar arquivo modelo Excel"
                >
-                  <a
+                  <Link
                      download="arquivo-modelo.xlsx"
                      href="/assets/excel/arquivo-modelo.xls"
                   >
-                     <Download className="mr-2 h-5 w-5" />
+                     <Download className="mr-2 w-8" aria-hidden="true" />
                      Baixe o arquivo
-                  </a>
+                  </Link>
                </Button>
             </div>
          </form>
