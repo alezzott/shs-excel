@@ -36,7 +36,7 @@ export function UploadItem() {
       const formData = new FormData()
       Array.from(files).forEach((file) => formData.append('file', file))
 
-      const DURATION_PROGRESS = 100000 // 60s
+      const DURATION_PROGRESS = 3000 // 60s
       const INTERVAL_PROGRESS = 500 // Atualiza a cada 0.5s
       let elapsed = 0
 

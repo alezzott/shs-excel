@@ -51,7 +51,12 @@ export default function RootLayout({
             {/* <Footer>
                <FooterComponent />
             </Footer> */}
-            <Toaster richColors expand={true} />
+            <Toaster
+               richColors
+               expand={true}
+               duration={5000}
+               position="top-center"
+            />
          </body>
       </html>
    )
