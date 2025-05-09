@@ -183,9 +183,11 @@ export function TableExcelItem() {
             handleDeleteItem(id)
             setDeleteItemId(null)
             setOpenDeleteDialog(false)
+            setRowSelection({})
          } else {
             selectedRows.forEach((row) => handleDeleteItem(row.original.id))
             setOpenDeleteDialog(false)
+            setRowSelection({})
          }
       },
       [handleDeleteItem, selectedRows]
