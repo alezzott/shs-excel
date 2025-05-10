@@ -30,6 +30,8 @@ import { TableActionBar } from './TableActionBar'
 import { DeleteSelectedDialog } from './TableAlertDialog'
 import { toast } from 'sonner'
 import { TablePagination } from './TablePagination'
+import { Input } from '../ui/input'
+import { TableSelectItemPage } from './TableSelectItemPage'
 
 export function TableExcelItem() {
    const [deleteItemId, setDeleteItemId] = useState<number | null>(null)
@@ -103,7 +105,7 @@ export function TableExcelItem() {
          },
          { accessorKey: 'code', header: 'Cód.' },
          { accessorKey: 'description', header: 'Descrição' },
-         { accessorKey: 'quantity', header: 'Quantidade' },
+         { accessorKey: 'quantity', header: 'Qtd' },
          {
             accessorKey: 'price',
             header: 'Preço',
@@ -211,64 +213,76 @@ export function TableExcelItem() {
    const filteredRows = table.getRowModel().rows
 
    return (
-      <div className="w-full mx-auto max-w-6xl my-1">
-         <div className="flex flex-wrap gap-4 mb-4">
-            <input
+      <div className="w-auto m-auto max-w-6xl my-1">
+         <div className="my-4">
+            <Input
                type="text"
                placeholder="Buscar por código ou descrição"
                value={filter}
                onChange={(e) => setFilter(e.target.value)}
+               className="bg-background"
             />
          </div>
 
-         <Table className="rounded-md border bg-background">
-            <TableHeader>
-               {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id} className="bg-muted/50">
-                     {headerGroup.headers.map((header) => (
-                        <TableHead
-                           key={header.id}
-                           style={{ width: header.getSize() }}
-                           className={
-                              header.id === 'actions' ? 'text-right' : ''
-                           }
-                        >
-                           {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                           )}
-                        </TableHead>
-                     ))}
-                  </TableRow>
-               ))}
-            </TableHeader>
-            <TableBody>
-               {filteredRows.length === 0 ? (
-                  <TableRow>
-                     <TableCell
-                        colSpan={columns.length}
-                        className="text-center"
-                     >
-                        Nenhum resultado encontrado.
-                     </TableCell>
-                  </TableRow>
-               ) : (
-                  filteredRows.map((row) => (
-                     <TableRow key={row.id} className="hover:bg-muted/50">
-                        {row.getVisibleCells().map((cell) => (
-                           <TableCell key={cell.id}>
+         <section className="!rounded-md border border-neutral-300 bg-background">
+            <Table>
+               <TableHeader>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                     <TableRow key={headerGroup.id} className="bg-muted/50">
+                        {headerGroup.headers.map((header) => (
+                           <TableHead
+                              key={header.id}
+                              style={{ width: header.getSize() }}
+                              className={
+                                 header.id === 'actions' ? 'text-right' : ''
+                              }
+                           >
                               {flexRender(
-                                 cell.column.columnDef.cell,
-                                 cell.getContext()
+                                 header.column.columnDef.header,
+                                 header.getContext()
                               )}
-                           </TableCell>
+                           </TableHead>
                         ))}
                      </TableRow>
-                  ))
-               )}
-            </TableBody>
-         </Table>
-         <section className="my-10">
+                  ))}
+               </TableHeader>
+               <TableBody>
+                  {filteredRows.length === 0 ? (
+                     <TableRow>
+                        <TableCell
+                           colSpan={columns.length}
+                           className="text-center py-4"
+                        >
+                           Nenhum resultado encontrado.
+                        </TableCell>
+                     </TableRow>
+                  ) : (
+                     filteredRows.map((row) => (
+                        <TableRow key={row.id} className="hover:bg-muted/50">
+                           {row.getVisibleCells().map((cell) => (
+                              <TableCell key={cell.id}>
+                                 {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext()
+                                 )}
+                              </TableCell>
+                           ))}
+                        </TableRow>
+                     ))
+                  )}
+               </TableBody>
+            </Table>
+         </section>
+         <section className="flex flex-row my-8 items-center">
+            <section className="flex-1 text-sm text-gray-500">
+               {table.getFilteredSelectedRowModel().rows.length} de{' '}
+               {table.getFilteredRowModel().rows.length} coluna(s) selecionadas
+            </section>
+            <TableSelectItemPage
+               pageSize={pageSize}
+               setPageSize={setPageSize}
+               setPageIndex={setPageIndex}
+            />
             <TablePagination
                pageCount={table.getPageCount()}
                pageIndex={table.getState().pagination.pageIndex}

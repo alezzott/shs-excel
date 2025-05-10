@@ -27,7 +27,7 @@ export function TablePagination({
    onNextPage,
 }: TablePaginationProps) {
    return (
-      <section className="my-10">
+      <section>
          <Pagination>
             <PaginationContent>
                <PaginationItem>

@@ -64,8 +64,6 @@ export async function handleGetExcelItems({
 }> {
    const offset = (page - 1) * limit
 
-   console.log(filter)
-
    const where = filter
       ? {
            OR: [
@@ -98,8 +96,6 @@ export async function handleGetExcelItems({
    }))
 
    const totalItems = await client.excel_items.count({ where })
-
-   console.log(filter, totalItems, page)
 
    return {
       items: formattedItems,
