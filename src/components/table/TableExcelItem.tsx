@@ -24,6 +24,7 @@ import { ModalDetailsItem } from '../modal/ModalDetailsItem'
 import { formatToBRL } from '@/app/api/utils/FormatCurrency'
 import { Trash } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useDebounce } from 'use-debounce'
 
 import { TableActionBar } from './TableActionBar'
 import { DeleteSelectedDialog } from './TableAlertDialog'
@@ -34,16 +35,16 @@ export function TableExcelItem() {
    const [deleteItemId, setDeleteItemId] = useState<number | null>(null)
    const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
    const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-   const [filterCode, setFilterCode] = useState('')
-   const [filterDescription, setFilterDescription] = useState('')
+   const [filter, setFilter] = useState('')
    const [pageIndex, setPageIndex] = useState(0)
    const [pageSize, setPageSize] = useState(10)
 
+   const [debouncedFilter] = useDebounce(filter, 400)
    const {
       data: upload,
       isLoading,
       refetch,
-   } = useFetch(pageIndex + 1, pageSize)
+   } = useFetch(pageIndex + 1, pageSize, debouncedFilter)
    const deleteItemMutation = useDelete()
    const data = useMemo(() => upload?.items || [], [upload])
 
@@ -159,19 +160,6 @@ export function TableExcelItem() {
          setPageIndex(next.pageIndex ?? 0)
          setPageSize(next.pageSize ?? pageSize)
       },
-      globalFilterFn: (row, columnId) => {
-         if (columnId === 'code') {
-            return row.original.code
-               .toLowerCase()
-               .includes(filterCode.toLowerCase())
-         }
-         if (columnId === 'description') {
-            return row.original.description
-               .toLowerCase()
-               .includes(filterDescription.toLowerCase())
-         }
-         return true
-      },
    })
 
    const selectedRows = table.getSelectedRowModel().rows
@@ -220,33 +208,16 @@ export function TableExcelItem() {
       )
    }
 
-   // Filtros client-side
-   const filteredRows = table.getRowModel().rows.filter((row) => {
-      const codeMatch = row.original.code
-         .toLowerCase()
-         .includes(filterCode.toLowerCase())
-      const descMatch = row.original.description
-         .toLowerCase()
-         .includes(filterDescription.toLowerCase())
-      return codeMatch && descMatch
-   })
+   const filteredRows = table.getRowModel().rows
 
    return (
       <div className="w-full mx-auto max-w-6xl my-1">
          <div className="flex flex-wrap gap-4 mb-4">
             <input
                type="text"
-               placeholder="Filtrar por código"
-               value={filterCode}
-               onChange={(e) => setFilterCode(e.target.value)}
-               className="border rounded px-2 py-1 text-sm"
-            />
-            <input
-               type="text"
-               placeholder="Filtrar por descrição"
-               value={filterDescription}
-               onChange={(e) => setFilterDescription(e.target.value)}
-               className="border rounded px-2 py-1 text-sm"
+               placeholder="Buscar por código ou descrição"
+               value={filter}
+               onChange={(e) => setFilter(e.target.value)}
             />
          </div>
 
