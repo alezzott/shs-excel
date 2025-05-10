@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { X } from 'lucide-react'
+import { Trash2, X } from 'lucide-react'
 
 interface TableActionBarProps {
    selectedCount: number
@@ -59,7 +59,7 @@ export function TableActionBar({
                onClick={onDeleteSelected}
                title="remover selecionados"
             >
-               Remover selecionados
+               <Trash2 />
             </Button>
          )}
          {children}

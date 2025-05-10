@@ -17,12 +17,14 @@ import {
    flexRender,
    RowSelectionState,
    ColumnDef,
+   SortingState,
+   getSortedRowModel,
 } from '@tanstack/react-table'
 import { useFetch } from '@/hooks/useFetch'
 import { useDelete } from '@/hooks/useDelete'
 import { ModalDetailsItem } from '../modal/ModalDetailsItem'
 import { formatToBRL } from '@/app/api/utils/FormatCurrency'
-import { Trash } from 'lucide-react'
+import { Trash, X } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useDebounce } from 'use-debounce'
 
@@ -32,6 +34,7 @@ import { toast } from 'sonner'
 import { TablePagination } from './TablePagination'
 import { Input } from '../ui/input'
 import { TableSelectItemPage } from './TableSelectItemPage'
+import { TableSortableHeader } from './TableSorteableHeader'
 
 export function TableExcelItem() {
    const [deleteItemId, setDeleteItemId] = useState<number | null>(null)
@@ -40,6 +43,7 @@ export function TableExcelItem() {
    const [filter, setFilter] = useState('')
    const [pageIndex, setPageIndex] = useState(0)
    const [pageSize, setPageSize] = useState(10)
+   const [sorting, setSorting] = useState<SortingState>([])
 
    const [debouncedFilter] = useDebounce(filter, 400)
    const {
@@ -98,12 +102,27 @@ export function TableExcelItem() {
          },
          {
             accessorKey: 'id',
-            header: 'id',
+            header: ({ column }) => {
+               return (
+                  <>
+                     <TableSortableHeader title="id" type={column} />
+                  </>
+               )
+            },
             cell: (info) => (
                <span className="font-medium">{info.getValue() as string}</span>
             ),
          },
-         { accessorKey: 'code', header: 'Cód.' },
+         {
+            accessorKey: 'code',
+            header: ({ column }) => {
+               return (
+                  <>
+                     <TableSortableHeader title="Cód" type={column} />
+                  </>
+               )
+            },
+         },
          { accessorKey: 'description', header: 'Descrição' },
          { accessorKey: 'quantity', header: 'Qtd' },
          {
@@ -147,12 +166,15 @@ export function TableExcelItem() {
          rowSelection,
          globalFilter: '',
          pagination: { pageIndex, pageSize },
+         sorting,
       },
       enableRowSelection: true,
       getCoreRowModel: getCoreRowModel(),
       getFilteredRowModel: getFilteredRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
       onRowSelectionChange: setRowSelection,
+      onSortingChange: setSorting,
+      getSortedRowModel: getSortedRowModel(),
       manualPagination: true,
       onPaginationChange: (updater) => {
          const next =
@@ -214,7 +236,7 @@ export function TableExcelItem() {
 
    return (
       <div className="w-auto m-auto max-w-6xl my-1">
-         <div className="my-4">
+         <section className="my-4">
             <Input
                type="text"
                placeholder="Buscar por código ou descrição"
@@ -222,7 +244,17 @@ export function TableExcelItem() {
                onChange={(e) => setFilter(e.target.value)}
                className="bg-background"
             />
-         </div>
+            {filter && (
+               <Button
+                  size="default"
+                  className="bg-green-500 hover:bg-green-600 text-white text-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  onClick={() => setFilter('')}
+                  aria-label="Limpar busca"
+               >
+                  <X />
+               </Button>
+            )}
+         </section>
 
          <section className="!rounded-md border border-neutral-300 bg-background">
             <Table>
@@ -258,7 +290,13 @@ export function TableExcelItem() {
                      </TableRow>
                   ) : (
                      filteredRows.map((row) => (
-                        <TableRow key={row.id} className="hover:bg-muted/50">
+                        <TableRow
+                           key={row.id}
+                           className={`
+                              hover:bg-muted/50
+                              ${row.getIsSelected() ? 'bg-zinc-100' : ''}
+                           `}
+                        >
                            {row.getVisibleCells().map((cell) => (
                               <TableCell key={cell.id}>
                                  {flexRender(
@@ -278,20 +316,22 @@ export function TableExcelItem() {
                {table.getFilteredSelectedRowModel().rows.length} de{' '}
                {table.getFilteredRowModel().rows.length} coluna(s) selecionadas
             </section>
-            <TableSelectItemPage
-               pageSize={pageSize}
-               setPageSize={setPageSize}
-               setPageIndex={setPageIndex}
-            />
-            <TablePagination
-               pageCount={table.getPageCount()}
-               pageIndex={table.getState().pagination.pageIndex}
-               canPreviousPage={table.getCanPreviousPage()}
-               canNextPage={table.getCanNextPage()}
-               onPageChange={table.setPageIndex}
-               onPreviousPage={table.previousPage}
-               onNextPage={table.nextPage}
-            />
+            <section className="gap-2 flex-row flex">
+               <TableSelectItemPage
+                  pageSize={pageSize}
+                  setPageSize={setPageSize}
+                  setPageIndex={setPageIndex}
+               />
+               <TablePagination
+                  pageCount={table.getPageCount()}
+                  pageIndex={table.getState().pagination.pageIndex}
+                  canPreviousPage={table.getCanPreviousPage()}
+                  canNextPage={table.getCanNextPage()}
+                  onPageChange={table.setPageIndex}
+                  onPreviousPage={table.previousPage}
+                  onNextPage={table.nextPage}
+               />
+            </section>
          </section>
          <TableActionBar
             selectedCount={selectedCount}
