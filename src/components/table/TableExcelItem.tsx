@@ -144,11 +144,12 @@ export function TableExcelItem() {
                <div className="flex gap-2 justify-end">
                   <Button
                      variant="outline"
-                     className="border-green-500 text-green-600 hover:bg-green-50"
+                     className="border-green-500 text-green-600 hover:bg-green-500 group"
                      onClick={() => setDeleteItemId(row.original.id)}
                      size="icon"
+                     title="remover linha"
                   >
-                     <Trash />
+                     <Trash className="h-4 w-4 transition-colors group-hover:text-green-100" />
                   </Button>
                </div>
             ),
