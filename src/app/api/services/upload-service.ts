@@ -1,6 +1,7 @@
 import { processExcelData } from '../utils/ProcessExcelData'
 import client from '../lib/prisma/client'
 import dayjs from 'dayjs'
+import { Prisma } from '@prisma/client'
 
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 10
@@ -50,15 +51,39 @@ export function handeGetPaginationParams(url: URL) {
    return { page, limit }
 }
 
-export async function handleGetExcelItems({ page, limit }: any): Promise<{
+export async function handleGetExcelItems({
+   page,
+   limit,
+   filter = '',
+}: any): Promise<{
    items: any
    totalItems: number
    page: number
    limit: number
+   filter: string
 }> {
    const offset = (page - 1) * limit
 
+   console.log(filter)
+
+   const where = filter
+      ? {
+           OR: [
+              {
+                 code: { contains: filter, mode: Prisma.QueryMode.insensitive },
+              },
+              {
+                 description: {
+                    contains: filter,
+                    mode: Prisma.QueryMode.insensitive,
+                 },
+              },
+           ],
+        }
+      : {}
+
    const items = await client.excel_items.findMany({
+      where,
       skip: offset,
       take: limit,
       orderBy: {
@@ -72,13 +97,16 @@ export async function handleGetExcelItems({ page, limit }: any): Promise<{
       updated_at: dayjs(item.updated_at).format('DD/MM/YYYY HH:mm:ss'),
    }))
 
-   const totalItems = await client.excel_items.count()
+   const totalItems = await client.excel_items.count({ where })
+
+   console.log(filter, totalItems, page)
 
    return {
       items: formattedItems,
       totalItems,
       page,
       limit,
+      filter,
    }
 }
 

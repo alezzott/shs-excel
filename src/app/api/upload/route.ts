@@ -79,7 +79,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
    try {
       const url = new URL(request.url)
       const { page, limit } = handeGetPaginationParams(url)
-      const { items, totalItems } = await handleGetExcelItems({ page, limit })
+      const filter = url.searchParams.get('filter') || ''
+      const { items, totalItems } = await handleGetExcelItems({
+         page,
+         limit,
+         filter,
+      })
       return NextResponse.json(
          {
             message: 'Success !',
