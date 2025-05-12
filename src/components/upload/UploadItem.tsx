@@ -4,6 +4,7 @@ import { Inbox, Download, Paperclip, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { Progress } from '../ui/progress'
 import Link from 'next/link'
+import { useFetch } from '@/hooks/useFetch'
 
 export function UploadItem() {
    const inputRef = useRef<HTMLInputElement>(null)
@@ -13,6 +14,8 @@ export function UploadItem() {
    const [selectedFiles, setSelectedFiles] = useState<File[]>([])
    const [progress, setProgress] = useState(0)
    const [uploadCanceled, setUploadCanceled] = useState(false)
+
+   const { refetch } = useFetch(1, 10)
 
    const handleDrag = (e: React.DragEvent<HTMLLabelElement>) => {
       e.preventDefault()
@@ -57,6 +60,7 @@ export function UploadItem() {
          if (res.ok) {
             toast.success('Arquivo(s) carregado(s) com sucesso!')
             setSelectedFiles([])
+            refetch()
          } else {
             toast.error(
                'Falha ao carregar o arquivo. Apenas arquivos em formato do excel (.xls e/ou .xlsx) são aceitos.'
@@ -88,7 +92,7 @@ export function UploadItem() {
 
    return (
       <section
-         className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow p-6"
+         className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow p-6 my-6"
          aria-labelledby="upload-section-title"
       >
          <form encType="multipart/form-data">
