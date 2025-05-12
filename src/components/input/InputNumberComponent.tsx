@@ -1,56 +1,75 @@
-import { Form, InputNumber } from 'antd'
-import { Rule } from 'antd/es/form'
-import { Controller, FieldError } from 'react-hook-form'
+import {
+   Control,
+   Controller,
+   FieldError,
+   FieldValues,
+   Path,
+} from 'react-hook-form'
+import { FormControl, FormItem, FormLabel, FormMessage } from '../ui/form'
+import { Input } from '../ui/input'
+import { maskFormatBRL, parseBRLValue } from '@/app/api/utils/FormatCurrency'
 
-interface InputNumberProps {
-   control?: any
-   name: string
+interface InputNumberProps<T extends FieldValues = FieldValues> {
+   control: Control<T>
+   name: Path<T>
    label: string
    placeholder?: string
    defaultValue?: any
-   rules?: Rule[]
    error?: FieldError
    min?: number
    style?: React.CSSProperties
    disabled?: boolean
+   formatBRL?: boolean
 }
 
-export const InputNumberComponent = ({
+export function InputNumberComponent<T extends FieldValues = FieldValues>({
    control,
    name,
    label,
    placeholder,
    defaultValue,
-   rules,
    error,
    min,
    style,
    disabled,
-}: InputNumberProps) => {
-   const validateStatus = error ? 'error' : undefined
-
+   formatBRL = false,
+}: InputNumberProps<T>) {
    return (
-      <Form.Item
-         label={label}
-         name={name}
-         rules={rules}
-         validateStatus={validateStatus}
-         help={error ? error.message : undefined}
-      >
-         <Controller
-            control={control}
-            name={name}
-            defaultValue={defaultValue}
-            render={({ field }) => (
-               <InputNumber
-                  {...field}
-                  placeholder={placeholder}
-                  min={min}
-                  style={style}
-                  disabled={disabled}
-               />
-            )}
-         />
-      </Form.Item>
+      <FormItem style={style}>
+         <FormLabel>{label}</FormLabel>
+         <FormControl>
+            <Controller
+               control={control}
+               name={name}
+               defaultValue={defaultValue}
+               render={({ field }) =>
+                  formatBRL ? (
+                     <Input
+                        {...field}
+                        type="text"
+                        inputMode="numeric"
+                        placeholder={placeholder}
+                        disabled={disabled}
+                        value={maskFormatBRL(field.value)}
+                        onChange={(e) => {
+                           const parsed = parseBRLValue(e.target.value)
+                           field.onChange(parsed)
+                        }}
+                     />
+                  ) : (
+                     <Input
+                        {...field}
+                        type="number"
+                        placeholder={placeholder}
+                        min={min}
+                        disabled={disabled}
+                        step="any"
+                     />
+                  )
+               }
+            />
+         </FormControl>
+         <FormMessage>{error?.message}</FormMessage>
+      </FormItem>
    )
 }

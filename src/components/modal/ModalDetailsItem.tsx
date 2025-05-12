@@ -1,5 +1,3 @@
-import { Button, Form, Modal, message } from 'antd'
-import { EditTwoTone } from '@ant-design/icons'
 import { useState } from 'react'
 import { usePatch } from '@/hooks/usePatch'
 import { useForm } from 'react-hook-form'
@@ -9,7 +7,19 @@ import { formatToBRL } from '@/app/api/utils/FormatCurrency'
 import { InputComponent } from '../input/InputComponent'
 import { InputNumberComponent } from '../input/InputNumberComponent'
 import { modalSchema } from '@/validators/ModalSchema'
-import styles from './Modal.module.scss'
+import {
+   Dialog,
+   DialogClose,
+   DialogContent,
+   DialogFooter,
+   DialogHeader,
+   DialogTitle,
+   DialogTrigger,
+} from '../ui/dialog'
+import { toast } from 'sonner'
+import { Button } from '../ui/button'
+import { Edit, Loader2 } from 'lucide-react'
+import { Form } from '../ui/form'
 
 type ModalSchema = z.infer<typeof modalSchema>
 
@@ -20,15 +30,17 @@ interface ModalProps {
 
 export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
    const [open, setOpen] = useState(false)
-   const [messageApi, contextHolder] = message.useMessage()
    const { mutateAsync: updateMutation, isLoading } = usePatch()
+
+   const methods = useForm<ModalSchema>({
+      resolver: zodResolver(modalSchema),
+   })
+
    const {
       control,
       handleSubmit,
       formState: { errors, isDirty },
-   } = useForm<ModalSchema>({
-      resolver: zodResolver(modalSchema),
-   })
+   } = methods
 
    const handleUpdate = async (data: any) => {
       const updatedItem = {
@@ -39,15 +51,9 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
       try {
          await updateMutation(updatedItem)
          onUpdateSuccess()
-         messageApi.open({
-            type: 'success',
-            content: 'Sucesso !',
-         })
+         toast.success('Atualizado com sucesso !')
       } catch (error) {
-         messageApi.open({
-            type: 'error',
-            content: 'Erro ao atualizar o item',
-         })
+         toast.error('Erro ao tentar atualizar o item, tente novamente')
       }
 
       setOpen(false)
@@ -55,115 +61,134 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
 
    return (
       <>
-         <Button
-            onClick={() => setOpen(true)}
-            style={{ border: '1px solid #22c55e' }}
-         >
-            <EditTwoTone twoToneColor="#22c55e" />
-         </Button>
-         <Modal
-            title="Detalhes do Item"
-            open={open}
-            onOk={handleSubmit(handleUpdate)}
-            confirmLoading={isLoading}
-            onCancel={() => setOpen(false)}
-            okButtonProps={{ disabled: !isDirty }}
-         >
-            <Form
-               scrollToFirstError
-               layout="vertical"
-               autoComplete="off"
-               variant="outlined"
-            >
-               {contextHolder}
-
-               <div className={styles['input-align']}>
-                  <InputComponent
-                     control={control}
-                     name="id"
-                     label="ID do Item"
-                     placeholder="ID do Item"
-                     defaultValue={item.id}
-                     disabled={true}
-                     style={{ width: '100%' }}
-                  />
-
-                  <InputComponent
-                     control={control}
-                     name="description"
-                     label="Descrição"
-                     placeholder="Descrição"
-                     defaultValue={item.description}
-                     disabled={true}
-                     style={{ width: '100%' }}
-                  />
-               </div>
-
-               <InputComponent
-                  control={control}
-                  name="description"
-                  label="Descrição"
-                  placeholder="Descrição"
-                  defaultValue={item.description}
-                  rules={[{ required: true }]}
-                  error={errors.description}
-               />
-
-               <div className={styles['input-align']}>
-                  <InputNumberComponent
-                     control={control}
-                     name="quantity"
-                     label="Quantidade"
-                     placeholder="Quantidade"
-                     defaultValue={item.quantity || 0}
-                     error={errors.quantity}
-                     style={{ width: '100%' }}
-                     disabled={false}
-                  />
-
-                  <InputNumberComponent
-                     control={control}
-                     name="price"
-                     label="Preço"
-                     placeholder="Price"
-                     defaultValue={item.price}
-                     error={errors.price}
-                     style={{ width: '100%' }}
-                  />
-
-                  <InputComponent
-                     control={control}
-                     name="total_price"
-                     label="Preço Total"
-                     placeholder="Preço Total"
-                     defaultValue={formatToBRL(item.total_price || 0)}
-                     disabled={true}
-                  />
-               </div>
-
-               <div className={styles['input-align']}>
-                  <InputComponent
-                     control={control}
-                     name="created_at"
-                     label="Data de criação"
-                     placeholder="Data de criação"
-                     defaultValue={item.created_at}
-                     disabled={true}
-                     style={{ width: '100%' }}
-                  />
-
-                  <InputComponent
-                     control={control}
-                     name="updated_at"
-                     label="Data de atualização"
-                     placeholder="Data de atualização"
-                     defaultValue={item.updated_at}
-                     disabled={true}
-                     style={{ width: '100%' }}
-                  />
-               </div>
-            </Form>
-         </Modal>
+         <Dialog open={open} onOpenChange={setOpen} modal={true}>
+            <DialogTrigger asChild>
+               <Button
+                  onClick={() => setOpen(true)}
+                  variant="outline"
+                  className="border-green-500 text-green-600 hover:bg-green-500 group"
+                  type="button"
+                  size="icon"
+               >
+                  <Edit className="h-4 w-4 transition-colors group-hover:text-green-100" />
+               </Button>
+            </DialogTrigger>
+            <DialogContent onPointerDownOutside={(e) => e.preventDefault()}>
+               <DialogHeader>
+                  <DialogTitle>Detalhes do Item</DialogTitle>
+               </DialogHeader>
+               <Form {...methods}>
+                  <form
+                     onSubmit={handleSubmit(handleUpdate)}
+                     className="space-y-4"
+                     autoComplete="off"
+                  >
+                     <div className="flex gap-4">
+                        <InputComponent
+                           control={control}
+                           name="id"
+                           label="ID do Item"
+                           placeholder="ID do Item"
+                           defaultValue={item.id}
+                           disabled={true}
+                           style={{ width: '100%' }}
+                        />
+                        <InputComponent
+                           control={control}
+                           name="description"
+                           label="Descrição"
+                           placeholder="Descrição"
+                           defaultValue={item.description}
+                           disabled={true}
+                           style={{ width: '100%' }}
+                        />
+                     </div>
+                     <InputComponent
+                        control={control}
+                        name="description"
+                        label="Descrição"
+                        placeholder="Descrição"
+                        defaultValue={item.description}
+                        error={errors.description}
+                     />
+                     <div className="flex gap-4 my-5">
+                        <InputNumberComponent
+                           control={control}
+                           name="quantity"
+                           label="Quantidade"
+                           placeholder="Quantidade"
+                           defaultValue={item.quantity || 0}
+                           error={errors.quantity}
+                           style={{ width: '100%' }}
+                           disabled={false}
+                           min={1}
+                        />
+                        <InputNumberComponent
+                           control={control}
+                           name="price"
+                           label="Preço"
+                           placeholder="Preço"
+                           defaultValue={item.price}
+                           error={errors.price}
+                           style={{ width: '100%' }}
+                           formatBRL={true}
+                        />
+                        <InputComponent
+                           control={control}
+                           name="total_price"
+                           label="Preço Total"
+                           placeholder="Preço Total"
+                           defaultValue={formatToBRL(item.total_price || 0)}
+                           disabled={true}
+                           style={{ width: '100%' }}
+                        />
+                     </div>
+                     <div className="flex gap-4">
+                        <InputComponent
+                           control={control}
+                           name="created_at"
+                           label="Data de criação"
+                           placeholder="Data de criação"
+                           defaultValue={item.created_at}
+                           disabled={true}
+                           style={{ width: '100%' }}
+                        />
+                        <InputComponent
+                           control={control}
+                           name="updated_at"
+                           label="Data de atualização"
+                           placeholder="Data de atualização"
+                           defaultValue={item.updated_at}
+                           disabled={true}
+                           style={{ width: '100%' }}
+                        />
+                     </div>
+                     <DialogFooter>
+                        <DialogClose asChild>
+                           <Button
+                              type="button"
+                              variant="outline"
+                              disabled={isLoading}
+                              onClick={() => setOpen(false)}
+                           >
+                              Cancelar
+                           </Button>
+                        </DialogClose>
+                        <Button
+                           type="submit"
+                           className="bg-green-500 text-white flex items-center justify-center"
+                           disabled={!isDirty || isLoading}
+                        >
+                           {isLoading && (
+                              <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                           )}
+                           Salvar
+                        </Button>
+                     </DialogFooter>
+                  </form>
+               </Form>
+            </DialogContent>
+         </Dialog>
       </>
    )
 }

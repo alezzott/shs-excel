@@ -1,55 +1,56 @@
-import { Form, Input } from 'antd'
-import { Rule } from 'antd/es/form'
 import React from 'react'
-import { Controller, FieldError } from 'react-hook-form'
+import {
+   Control,
+   Controller,
+   FieldError,
+   FieldValues,
+   Path,
+} from 'react-hook-form'
+import { FormControl, FormItem, FormLabel, FormMessage } from '../ui/form'
+import { Input } from '../ui/input'
 
-interface InputProps {
-   control?: any
-   name: string
+interface InputProps<T extends FieldValues = FieldValues> {
+   control?: Control<T>
+   name: Path<T> | 'created_at' | 'updated_at' | 'total_price' | 'id'
    label: string
    placeholder?: string
    defaultValue?: any
-   rules?: Rule[]
    error?: FieldError
    min?: number
    style?: React.CSSProperties
    disabled?: boolean
 }
 
-export const InputComponent = ({
+export const InputComponent = <T extends FieldValues = FieldValues>({
    control,
    name,
    label,
    placeholder,
    defaultValue,
-   rules,
    error,
    min,
    style,
    disabled,
-}: InputProps) => {
+}: InputProps<T>) => {
    return (
-      <Form.Item
-         label={label}
-         name={name}
-         rules={rules}
-         validateStatus={error ? 'error' : undefined}
-         help={error ? error.message : undefined}
-         style={style}
-      >
-         <Controller
-            control={control}
-            name={name}
-            defaultValue={defaultValue}
-            render={({ field }) => (
-               <Input
-                  {...field}
-                  placeholder={placeholder}
-                  min={min}
-                  disabled={disabled}
-               />
-            )}
-         />
-      </Form.Item>
+      <FormItem style={style}>
+         <FormLabel>{label}</FormLabel>
+         <FormControl>
+            <Controller
+               control={control}
+               name={name as Path<T>}
+               defaultValue={defaultValue}
+               render={({ field }) => (
+                  <Input
+                     {...field}
+                     placeholder={placeholder}
+                     min={min}
+                     disabled={disabled}
+                  />
+               )}
+            />
+         </FormControl>
+         <FormMessage>{error?.message}</FormMessage>
+      </FormItem>
    )
 }

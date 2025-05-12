@@ -139,9 +139,12 @@ export function TableExcelItem() {
          { accessorKey: 'updated_at', header: 'Data de Atualização' },
          {
             id: 'actions',
-            header: () => <span className="text-right">Opções</span>,
             cell: ({ row }) => (
                <div className="flex gap-2 justify-end">
+                  <ModalDetailsItem
+                     item={row.original}
+                     onUpdateSuccess={handleUpdateSuccess}
+                  />
                   <Button
                      variant="outline"
                      className="border-green-500 text-green-600 hover:bg-green-500 group"
@@ -155,7 +158,7 @@ export function TableExcelItem() {
             ),
          },
       ],
-      []
+      [handleUpdateSuccess]
    )
 
    // Instância da tabela
