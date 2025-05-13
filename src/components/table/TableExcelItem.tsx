@@ -258,7 +258,7 @@ export function TableExcelItem() {
                      </TableRow>
                   ))}
                </TableHeader>
-               <TableBody>
+               <TableBody className="overflow-x-scroll">
                   {isLoading ? (
                      <TableRow>
                         <TableCell
@@ -267,7 +267,7 @@ export function TableExcelItem() {
                         >
                            <LoaderSpinning
                               size={80}
-                              color="#10B981"
+                              color="#22c55e"
                               className="mx-auto"
                            />
                         </TableCell>
@@ -309,7 +309,7 @@ export function TableExcelItem() {
                {table.getFilteredSelectedRowModel().rows.length} de{' '}
                {table.getFilteredRowModel().rows.length} coluna(s) selecionadas
             </section>
-            <section className="gap-2 flex-row flex">
+            <section className="gap-2 flex-row max-lg:flex-col flex">
                <TableSelectItemPage
                   pageSize={pageSize}
                   setPageSize={setPageSize}

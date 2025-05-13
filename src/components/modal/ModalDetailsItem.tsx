@@ -49,7 +49,6 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
       }
 
       try {
-         await new Promise((resolve) => setTimeout(resolve, 5000))
          await updateMutation(updatedItem)
          onUpdateSuccess()
          toast.success('Atualizado com sucesso !')

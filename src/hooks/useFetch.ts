@@ -5,6 +5,7 @@ const fetchItems = async ({
    queryKey,
 }: any): Promise<{ items: Excel[]; totalItems: number }> => {
    const [, { currentPage, pageSize, filter }] = queryKey
+   // await new Promise((resolve) => setTimeout(resolve, 5000))
    const { data } = await api.common.get<ExcelProps>(
       `/upload?page=${currentPage}&limit=${pageSize}&filter=${encodeURIComponent(filter || '')}`
    )
