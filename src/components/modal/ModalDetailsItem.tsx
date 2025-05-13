@@ -49,13 +49,13 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
       }
 
       try {
+         await new Promise((resolve) => setTimeout(resolve, 5000))
          await updateMutation(updatedItem)
          onUpdateSuccess()
          toast.success('Atualizado com sucesso !')
       } catch (error) {
          toast.error('Erro ao tentar atualizar o item, tente novamente')
       }
-
       setOpen(false)
    }
 
@@ -73,7 +73,10 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                   <Edit className="h-4 w-4 transition-colors group-hover:text-green-100" />
                </Button>
             </DialogTrigger>
-            <DialogContent onPointerDownOutside={(e) => e.preventDefault()}>
+            <DialogContent
+               onPointerDownOutside={(e) => e.preventDefault()}
+               className="max-lg:max-w-xl lg:max-w-4xl min-h-[400px] max-h-[80vh] overflow-y-auto"
+            >
                <DialogHeader>
                   <DialogTitle>Detalhes do Item</DialogTitle>
                </DialogHeader>
@@ -83,7 +86,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                      className="space-y-4"
                      autoComplete="off"
                   >
-                     <div className="flex gap-4">
+                     <section className="flex gap-4 items-start">
                         <InputComponent
                            control={control}
                            name="id"
@@ -102,7 +105,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                            disabled={true}
                            style={{ width: '100%' }}
                         />
-                     </div>
+                     </section>
                      <InputComponent
                         control={control}
                         name="description"
@@ -111,7 +114,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                         defaultValue={item.description}
                         error={errors.description}
                      />
-                     <div className="flex gap-4 my-5">
+                     <section className="flex gap-4 items-start">
                         <InputNumberComponent
                            control={control}
                            name="quantity"
@@ -142,8 +145,8 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                            disabled={true}
                            style={{ width: '100%' }}
                         />
-                     </div>
-                     <div className="flex gap-4">
+                     </section>
+                     <section className="flex gap-4 items-start">
                         <InputComponent
                            control={control}
                            name="created_at"
@@ -162,7 +165,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                            disabled={true}
                            style={{ width: '100%' }}
                         />
-                     </div>
+                     </section>
                      <DialogFooter>
                         <DialogClose asChild>
                            <Button

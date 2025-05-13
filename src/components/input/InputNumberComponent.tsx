@@ -55,6 +55,11 @@ export function InputNumberComponent<T extends FieldValues = FieldValues>({
                            const parsed = parseBRLValue(e.target.value)
                            field.onChange(parsed)
                         }}
+                        className={
+                           error
+                              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                              : ''
+                        }
                      />
                   ) : (
                      <Input
@@ -64,12 +69,19 @@ export function InputNumberComponent<T extends FieldValues = FieldValues>({
                         min={min}
                         disabled={disabled}
                         step="any"
+                        className={
+                           error
+                              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                              : ''
+                        }
                      />
                   )
                }
             />
          </FormControl>
-         <FormMessage>{error?.message}</FormMessage>
+         <FormMessage className="block min-h-[1.25rem] text-xs">
+            {error?.message}
+         </FormMessage>
       </FormItem>
    )
 }

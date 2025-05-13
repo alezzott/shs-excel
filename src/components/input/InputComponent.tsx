@@ -46,11 +46,18 @@ export const InputComponent = <T extends FieldValues = FieldValues>({
                      placeholder={placeholder}
                      min={min}
                      disabled={disabled}
+                     className={
+                        error
+                           ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                           : ''
+                     }
                   />
                )}
             />
          </FormControl>
-         <FormMessage>{error?.message}</FormMessage>
+         <FormMessage className="block min-h-[1.25rem] text-xs">
+            {error?.message}
+         </FormMessage>
       </FormItem>
    )
 }
