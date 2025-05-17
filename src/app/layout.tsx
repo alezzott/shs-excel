@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
    title: 'MedFileX',
    description: 'Importe seus arquivos do excel e gerencie em tabelas',
-   keywords: ['Next.js', 'React', 'JavaScript', 'TypeScript'],
+   keywords: ['Next.js', 'React', 'JavaScript', 'TypeScript', 'tailwindcss'],
    applicationName: 'MedFileX',
    openGraph: {
       locale: 'pt_BR',
@@ -36,21 +36,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
    children,
-}: Readonly<{
-   children: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
    return (
       <html lang="en">
-         <body
-            className={inter.className}
-            style={{ backgroundColor: '#f7f7f7', margin: '0 auto' }}
-         >
+         <body className={`${inter.className} bg-gray-100`}>
             <link rel="icon" href="./favicon.png" sizes="any" />
-            {/* <HeaderComponent /> */}
-            <div className="@container">{children}</div>
-            {/* <Footer>
-               <FooterComponent />
-            </Footer> */}
+            <HeaderComponent />
+            <main className="@container px-4 py-4 sm:px-6 lg:px-8">
+               {children}
+            </main>
+            <FooterComponent />
             <Toaster
                richColors
                expand={true}
