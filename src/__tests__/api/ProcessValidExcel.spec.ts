@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest'
-
 function isValidExcelFile(fileExtension: string | undefined): boolean {
    if (!fileExtension) return false
    return fileExtension === 'xls' || fileExtension === 'xlsx'
