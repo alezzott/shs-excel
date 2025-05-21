@@ -15,3 +15,18 @@ interface ExcelProps {
       totalItems: number
    }
 }
+
+type FetchParams = {
+   currentPage: number
+   pageSize: number
+   filter: string
+}
+
+type ExcelItem = Excel & { key: number }
+
+type FetchResult = {
+   items: ExcelItem[]
+   totalItems: number
+}
+
+type QueryKey = [string, FetchParams]

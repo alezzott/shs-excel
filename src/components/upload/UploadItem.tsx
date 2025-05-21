@@ -57,15 +57,13 @@ export function UploadItem() {
       setProgress(0)
       const formData = new FormData()
       Array.from(files).forEach((file) => formData.append('file', file))
-
       handleGetProgress(setProgress, timerRef)
-
       try {
          await new Promise((res) =>
             setTimeout(res, UPLOAD_PROGRESS_DURATION_MS)
          )
          const res = await handleUploadItems(formData)
-         if (res.status === 200) {
+         if (!res.data?.error) {
             toast.success('Arquivo(s) carregado(s) com sucesso!')
             setSelectedFiles([])
             refetch()

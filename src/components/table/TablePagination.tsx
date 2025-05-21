@@ -68,7 +68,7 @@ export function TablePagination({
                      className={
                         'hover:bg-neutral-200' +
                         (!canPreviousPage
-                           ? ' opacity-50 cursor-not-allowed'
+                           ? ' cursor-not-allowed opacity-50'
                            : '')
                      }
                   />
@@ -98,7 +98,7 @@ export function TablePagination({
                      tabIndex={!canNextPage ? -1 : 0}
                      className={
                         'hover:bg-neutral-200' +
-                        (!canNextPage ? ' opacity-50 cursor-not-allowed' : '')
+                        (!canNextPage ? ' cursor-not-allowed opacity-50' : '')
                      }
                   />
                </PaginationItem>

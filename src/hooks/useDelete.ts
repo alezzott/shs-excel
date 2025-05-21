@@ -1,9 +1,9 @@
 import api from '@/config/axios'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 const deleteItem = async (id: string | number) => {
    const response = await api.common.delete(`/upload`, {
-      data: { id: id },
+      data: { id },
       headers: {
          'Content-Type': 'application/json',
       },
@@ -11,6 +11,13 @@ const deleteItem = async (id: string | number) => {
    return response.data
 }
 
-export const useDelete = () => {
-   return useMutation(deleteItem)
+export const useDelete = (
+   onSuccess?: () => void,
+   onError?: (error: unknown) => void
+) => {
+   return useMutation({
+      mutationFn: deleteItem,
+      onSuccess,
+      onError,
+   })
 }

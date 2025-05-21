@@ -4,7 +4,8 @@
       "next/core-web-vitals",
       "plugin:@typescript-eslint/recommended",
       "plugin:prettier/recommended",
-      "plugin:jsx-a11y/recommended"
+      "plugin:jsx-a11y/recommended",
+      "plugin:@tanstack/query/recommended"
    ],
    "rules": {
       "prefer-const": "warn",

@@ -143,14 +143,14 @@ export function TableExcelItem() {
          {
             id: 'actions',
             cell: ({ row }) => (
-               <div className="flex gap-2 justify-end">
+               <div className="flex justify-end gap-2">
                   <ModalDetailsItem
                      item={row.original}
                      onUpdateSuccess={handleUpdateSuccess}
                   />
                   <Button
                      variant="outline"
-                     className="border-green-500 text-green-600 hover:bg-green-500 group"
+                     className="group border-green-500 text-green-600 hover:bg-green-500"
                      onClick={() => setDeleteItemId(row.original.id)}
                      size="icon"
                      title="remover linha"
@@ -215,7 +215,7 @@ export function TableExcelItem() {
    const filteredRows = table.getRowModel().rows
 
    return (
-      <div className="w-auto m-auto max-w-6xl my-1">
+      <div className="m-auto my-1 w-auto max-w-6xl">
          <section className="my-4">
             <Input
                type="text"
@@ -227,7 +227,7 @@ export function TableExcelItem() {
             {filter && (
                <Button
                   size="default"
-                  className="bg-green-500 hover:bg-green-600 text-white text-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="text-md bg-green-500 text-white hover:bg-green-600 focus:ring-2 focus:ring-green-500 focus:outline-none"
                   onClick={() => setFilter('')}
                   aria-label="Limpar busca"
                >
@@ -236,7 +236,7 @@ export function TableExcelItem() {
             )}
          </section>
 
-         <section className="!rounded-md border border-neutral-300 bg-background">
+         <section className="bg-background !rounded-md border border-neutral-300">
             <Table>
                <TableHeader>
                   {table.getHeaderGroups().map((headerGroup) => (
@@ -263,7 +263,7 @@ export function TableExcelItem() {
                      <TableRow>
                         <TableCell
                            colSpan={columns.length}
-                           className="text-center py-8"
+                           className="py-8 text-center"
                         >
                            <LoaderSpinning
                               size={80}
@@ -276,7 +276,7 @@ export function TableExcelItem() {
                      <TableRow>
                         <TableCell
                            colSpan={columns.length}
-                           className="text-center py-4"
+                           className="py-4 text-center"
                         >
                            Nenhum resultado encontrado.
                         </TableCell>
@@ -285,10 +285,7 @@ export function TableExcelItem() {
                      filteredRows.map((row) => (
                         <TableRow
                            key={row.id}
-                           className={`
-                              hover:bg-muted/50
-                              ${row.getIsSelected() ? 'bg-zinc-100' : ''}
-                           `}
+                           className={`hover:bg-muted/50 ${row.getIsSelected() ? 'bg-zinc-100' : ''} `}
                         >
                            {row.getVisibleCells().map((cell) => (
                               <TableCell key={cell.id}>
@@ -304,12 +301,12 @@ export function TableExcelItem() {
                </TableBody>
             </Table>
          </section>
-         <section className="flex flex-row my-8 items-center">
+         <section className="my-8 flex flex-row items-center">
             <section className="flex-1 text-sm text-gray-500">
                {table.getFilteredSelectedRowModel().rows.length} de{' '}
                {table.getFilteredRowModel().rows.length} coluna(s) selecionadas
             </section>
-            <section className="gap-2 flex-row max-lg:flex-col flex">
+            <section className="flex flex-row gap-2 max-lg:flex-col">
                <TableSelectItemPage
                   pageSize={pageSize}
                   setPageSize={setPageSize}

@@ -1,5 +1,5 @@
 import api from '@/config/axios'
-import { useMutation } from 'react-query'
+import { useMutation } from '@tanstack/react-query'
 
 const updateItems = async (updateData: Excel) => {
    // await new Promise((resolve) => setTimeout(resolve, 5000))
@@ -7,6 +7,13 @@ const updateItems = async (updateData: Excel) => {
    return response.data
 }
 
-export const usePatch = () => {
-   return useMutation(updateItems)
+export const usePatch = (
+   onSuccess?: () => void,
+   onError?: (error: unknown) => void
+) => {
+   return useMutation({
+      mutationFn: updateItems,
+      onSuccess,
+      onError,
+   })
 }

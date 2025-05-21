@@ -38,7 +38,7 @@ export function DeleteSelectedDialog({
                <AlertDialogCancel>Cancelar</AlertDialogCancel>
                <AlertDialogAction
                   onClick={onConfirm}
-                  className="bg-destructive text-white hover:bg-destructive/90"
+                  className="bg-destructive hover:bg-destructive/90 text-white"
                >
                   Remover
                </AlertDialogAction>

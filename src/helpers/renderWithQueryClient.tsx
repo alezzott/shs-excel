@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import { render, RenderOptions } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 export function renderWithQueryClient(
    ui: ReactElement,

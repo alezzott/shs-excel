@@ -30,7 +30,7 @@ interface ModalProps {
 
 export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
    const [open, setOpen] = useState(false)
-   const { mutateAsync: updateMutation, isLoading } = usePatch()
+   const { mutateAsync: updateMutation, isPending } = usePatch()
 
    const methods = useForm<ModalSchema>({
       resolver: zodResolver(modalSchema),
@@ -65,7 +65,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                <Button
                   onClick={() => setOpen(true)}
                   variant="outline"
-                  className="border-green-500 text-green-600 hover:bg-green-500 group"
+                  className="group border-green-500 text-green-600 hover:bg-green-500"
                   type="button"
                   size="icon"
                >
@@ -74,7 +74,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
             </DialogTrigger>
             <DialogContent
                onPointerDownOutside={(e) => e.preventDefault()}
-               className="max-lg:max-w-xl lg:max-w-4xl min-h-[400px] max-h-[80vh] overflow-y-auto"
+               className="max-h-[80vh] min-h-[400px] overflow-y-auto max-lg:max-w-xl lg:max-w-4xl"
             >
                <DialogHeader>
                   <DialogTitle>Detalhes do Item</DialogTitle>
@@ -85,7 +85,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                      className="space-y-4"
                      autoComplete="off"
                   >
-                     <section className="flex gap-4 items-start">
+                     <section className="flex items-start gap-4">
                         <InputComponent
                            control={control}
                            name="id"
@@ -113,7 +113,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                         defaultValue={item.description}
                         error={errors.description}
                      />
-                     <section className="flex gap-4 items-start">
+                     <section className="flex items-start gap-4">
                         <InputNumberComponent
                            control={control}
                            name="quantity"
@@ -145,7 +145,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                            style={{ width: '100%' }}
                         />
                      </section>
-                     <section className="flex gap-4 items-start">
+                     <section className="flex items-start gap-4">
                         <InputComponent
                            control={control}
                            name="created_at"
@@ -170,7 +170,7 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                            <Button
                               type="button"
                               variant="outline"
-                              disabled={isLoading}
+                              disabled={isPending}
                               onClick={() => setOpen(false)}
                            >
                               Cancelar
@@ -178,11 +178,11 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                         </DialogClose>
                         <Button
                            type="submit"
-                           className="bg-green-500 text-white flex items-center justify-center"
-                           disabled={!isDirty || isLoading}
+                           className="flex items-center justify-center bg-green-500 text-white"
+                           disabled={!isDirty || isPending}
                         >
-                           {isLoading && (
-                              <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                           {isPending && (
+                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                            )}
                            Salvar
                         </Button>
