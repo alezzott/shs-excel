@@ -1,12 +1,15 @@
-import client from '../lib/prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 import {
    handeGetPaginationParams,
    handleGetExcelItems,
    handleRemoveExcelItemById,
-   handleUpdateExcelItems,
    handleUploadExcel,
-} from '../services/upload-service'
+} from '../services/excel/excel.service'
+import { prismaExcelRepository } from '../repository/excel-repository'
+import { updateExcelItemService } from '../services/excel/excel.service'
+import { withErrorHandler } from '../middlewares/error-handler'
+import { modalPatchSchema } from '@/validators/modal-schema'
+import { validateRequest } from '../middlewares/validate-request'
 
 function respondWithError(
    errorMessage: string,
@@ -41,39 +44,29 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
    }
 }
 
-export async function PATCH(request: NextRequest): Promise<NextResponse> {
-   try {
-      const { id, description, quantity, price, ...rest } =
-         (await request.json()) as Excel
+export const PATCH = withErrorHandler(
+   async (request: NextRequest): Promise<NextResponse> => {
+      const data = await request.json()
+      const validation = validateRequest(modalPatchSchema, data)
+      if (!validation.valid) return validation.response
 
-      if (Object.keys(rest).length > 0) {
-         return respondWithError('Invalid fields provided', 400)
+      const result = await updateExcelItemService(prismaExcelRepository, data)
+      if (result.error) {
+         return NextResponse.json(
+            { error: result.error },
+            { status: result.status }
+         )
       }
 
-      const itemExists = await client.excel_items.findUnique({
-         where: { id: id },
-      })
-
-      if (!itemExists) {
-         return respondWithError('ID not found', 404)
-      }
-
-      const updatedItem = await handleUpdateExcelItems(Number(id), {
-         description,
-         quantity,
-         price,
-      })
       return NextResponse.json(
          {
             message: 'Item atualizado com sucesso',
-            item: updatedItem,
+            item: result.item,
          },
          { status: 200 }
       )
-   } catch (error) {
-      return respondWithError('Error updating item', 500)
    }
-}
+)
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
    try {

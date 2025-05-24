@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { formatToBRL } from '@/app/api/utils/FormatCurrency'
 import { InputComponent } from '../input/InputComponent'
 import { InputNumberComponent } from '../input/InputNumberComponent'
-import { modalSchema } from '@/validators/ModalSchema'
+import { modalSchema } from '@/validators/modal-schema'
 import {
    Dialog,
    DialogClose,

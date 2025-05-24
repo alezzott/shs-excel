@@ -1,7 +1,36 @@
-import { processExcelData } from '../utils/ProcessExcelData'
-import client from '../lib/prisma/client'
-import dayjs from 'dayjs'
+import { ModalPatchInput } from '@/validators/modal-schema'
+import { ExcelRepository } from '../../repository/excel-repository'
+import client from '../../lib/prisma/client'
+import { processExcelData } from '../../utils/ProcessExcelData'
 import { Prisma } from '@prisma/client'
+import { formatItemsDate } from '../../utils/format-data'
+
+export async function updateExcelItemService(
+   repo: ExcelRepository,
+   data: ModalPatchInput
+) {
+   const { id, description, quantity, price, ...rest } = data
+
+   if (!id) {
+      return { error: 'ID required', status: 400 }
+   }
+
+   if (Object.keys(rest).length > 0) {
+      return { error: 'Invalid fields provided', status: 400 }
+   }
+
+   const itemExists = await repo.findById(Number(id))
+   if (!itemExists) {
+      return { error: 'ID not found', status: 404 }
+   }
+
+   const updatedItem = await repo.update(Number(id), {
+      description,
+      quantity,
+      price,
+   })
+   return { item: updatedItem }
+}
 
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 10
@@ -89,12 +118,7 @@ export async function handleGetExcelItems({
       },
    })
 
-   const formattedItems = items.map((item) => ({
-      ...item,
-      created_at: dayjs(item.created_at).format('DD/MM/YYYY HH:mm:ss'),
-      updated_at: dayjs(item.updated_at).format('DD/MM/YYYY HH:mm:ss'),
-   }))
-
+   const formattedItems = formatItemsDate(items)
    const totalItems = await client.excel_items.count({ where })
 
    return {
