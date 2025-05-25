@@ -24,7 +24,7 @@ export async function updateExcelItemService(
       return { error: 'ID not found', status: 404 }
    }
 
-   const updatedItem = await repo.update(Number(id), {
+   const updatedItem = await handleUpdateExcelItems(Number(id), {
       description,
       quantity,
       price,
@@ -45,8 +45,8 @@ export async function handleUpdateExcelItems(
    id: number,
    updates: Partial<{
       description: string
-      quantity: number
-      price: number
+      quantity: number | null
+      price: number | null
       updated_at: Date
    }>
 ) {
@@ -61,11 +61,17 @@ export async function handleUpdateExcelItems(
    const { quantity = currentItem.quantity, price = currentItem.price }: any =
       updates
 
-   const total_price = quantity * price
+   const updateData = {
+      total_price: quantity * price,
+      description: updates.description,
+      quantity,
+      price,
+      updated_at: updates.updated_at,
+   }
 
    const updateExcel = await client.excel_items.update({
       where: { id: id },
-      data: { ...updates, total_price },
+      data: updateData,
    })
 
    return updateExcel

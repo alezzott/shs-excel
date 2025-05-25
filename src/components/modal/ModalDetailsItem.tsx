@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { usePatch } from '@/hooks/usePatch'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { formatToBRL } from '@/app/api/utils/FormatCurrency'
 import { InputComponent } from '../input/InputComponent'
 import { InputNumberComponent } from '../input/InputNumberComponent'
-import { modalSchema } from '@/validators/modal-schema'
+import { ModalPatchInput, modalPatchSchema } from '@/validators/modal-schema'
 import {
    Dialog,
    DialogClose,
@@ -21,8 +20,6 @@ import { Button } from '../ui/button'
 import { Edit, Loader2 } from 'lucide-react'
 import { Form } from '../ui/form'
 
-type ModalSchema = z.infer<typeof modalSchema>
-
 interface ModalProps {
    item: Excel
    onUpdateSuccess: () => void
@@ -32,8 +29,8 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
    const [open, setOpen] = useState(false)
    const { mutateAsync: updateMutation, isPending } = usePatch()
 
-   const methods = useForm<ModalSchema>({
-      resolver: zodResolver(modalSchema),
+   const methods = useForm<ModalPatchInput>({
+      resolver: zodResolver(modalPatchSchema),
    })
 
    const {
