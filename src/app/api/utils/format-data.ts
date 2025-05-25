@@ -1,14 +1,7 @@
 export function formatDate(date: Date): string {
-   const formatter = new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-   })
-   return formatter.format(date)
+   const d = new Date(date)
+   const pad = (n: number) => n.toString().padStart(2, '0')
+   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} - ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
 }
 
 export function formatItemsDate<
