@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react'
-import { UploadItem } from '../UploadItem'
+import { UploadItem } from '../../UploadItem'
 import { renderWithQueryClient } from '@/helpers/renderWithQueryClient'
 
 describe('UploadItem - Drag and Drop', () => {

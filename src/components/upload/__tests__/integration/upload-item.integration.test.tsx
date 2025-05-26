@@ -1,5 +1,5 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
-import { UploadItem } from '../UploadItem'
+import { UploadItem } from '../../UploadItem'
 import axios from 'axios'
 import { renderWithQueryClient } from '@/helpers/renderWithQueryClient'
 
