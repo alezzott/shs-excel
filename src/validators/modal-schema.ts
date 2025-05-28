@@ -1,4 +1,4 @@
-import { parseBRLValue } from '@/app/api/utils/FormatCurrency'
+import { parseBRLValue } from '@/app/api/utils/format-currency'
 import { z } from 'zod'
 
 export const modalSchema = z.object({

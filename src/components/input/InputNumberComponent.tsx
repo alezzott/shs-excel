@@ -7,7 +7,7 @@ import {
 } from 'react-hook-form'
 import { FormControl, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
-import { maskFormatBRL, parseBRLValue } from '@/app/api/utils/FormatCurrency'
+import { maskFormatBRL, parseBRLValue } from '@/app/api/utils/format-currency'
 
 interface InputNumberProps<T extends FieldValues = FieldValues> {
    control: Control<T>
