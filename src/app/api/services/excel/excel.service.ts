@@ -1,7 +1,7 @@
 import { ModalPatchInput } from '@/validators/modal-schema'
 import { ExcelRepository } from '../../repository/excel-repository'
 import client from '../../lib/prisma/client'
-import { processExcelData } from '../../utils/ProcessExcelData'
+import { handleReadExcelData } from '../../utils/read-excel-data'
 import { Prisma } from '@prisma/client'
 import { formatItemsDate } from '../../utils/format-data'
 
@@ -35,10 +35,11 @@ export async function updateExcelItemService(
 const DEFAULT_PAGE = 1
 const DEFAULT_LIMIT = 10
 
-export async function handleUploadExcel(file: File) {
+export async function handleUploadExcel(file: File, repo: ExcelRepository) {
    const buffer = await file.arrayBuffer()
    const fileBuffer = Buffer.from(buffer)
-   await processExcelData(fileBuffer)
+   const excelData = handleReadExcelData(fileBuffer)
+   await repo.createMany(excelData)
 }
 
 export async function handleUpdateExcelItems(

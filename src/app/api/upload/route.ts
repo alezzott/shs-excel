@@ -8,8 +8,9 @@ import {
 import { prismaExcelRepository } from '../repository/excel-repository'
 import { updateExcelItemService } from '../services/excel/excel.service'
 import { withErrorHandler } from '../middlewares/error-handler'
-import { modalPatchSchema } from '@/validators/modal-schema'
+import { modalSchema } from '@/validators/modal-schema'
 import { validateRequest } from '../middlewares/validate-request'
+import { uploadExcelSchema } from '@/validators/upload-schema'
 
 function respondWithError(
    errorMessage: string,
@@ -18,36 +19,26 @@ function respondWithError(
    return NextResponse.json({ error: errorMessage }, { status: statusCode })
 }
 
-function isValidExcelFile(fileExtension: string): boolean {
-   return fileExtension === 'xls' || fileExtension === 'xlsx'
-}
-
-export async function POST(request: NextRequest): Promise<NextResponse> {
-   try {
+export const POST = withErrorHandler(
+   async (request: NextRequest): Promise<NextResponse> => {
       const formData = await request.formData()
       const fileEntry = formData.get('file')
 
-      if (!fileEntry) {
-         return respondWithError('file not found or invalid', 404)
+      const validation = uploadExcelSchema.safeParse({ file: fileEntry })
+      if (!validation.success) {
+         return respondWithError(validation.error.errors[0].message, 400)
       }
 
-      const file = fileEntry as File
-      const fileExtension = file.name.split('.').pop()?.toLowerCase() ?? ''
-
-      if (!isValidExcelFile(fileExtension)) {
-         return respondWithError('Only excel files (.xls or.xlsx)', 500)
-      }
-      await handleUploadExcel(file)
+      const file = validation.data.file
+      await handleUploadExcel(file, prismaExcelRepository)
       return NextResponse.json({ message: 'Upload completo' }, { status: 201 })
-   } catch (error) {
-      return respondWithError('Error during file upload', 500)
    }
-}
+)
 
 export const PATCH = withErrorHandler(
    async (request: NextRequest): Promise<NextResponse> => {
       const data = await request.json()
-      const validation = validateRequest(modalPatchSchema, data)
+      const validation = validateRequest(modalSchema, data)
       if (!validation.valid) return validation.response
 
       const result = await updateExcelItemService(prismaExcelRepository, data)
