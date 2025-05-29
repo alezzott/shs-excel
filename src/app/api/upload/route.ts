@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
    handeGetPaginationParams,
+   handleDeleteItem,
    handleGetExcelItems,
-   handleRemoveExcelItemById,
    handleUploadExcel,
 } from '../services/excel/excel.service'
 import { prismaExcelRepository } from '../repository/excel-repository'
@@ -11,13 +11,6 @@ import { withErrorHandler } from '../middlewares/error-handler'
 import { modalSchema } from '@/validators/modal-schema'
 import { validateRequest } from '../middlewares/validate-request'
 import { uploadExcelSchema } from '@/validators/upload-schema'
-
-function respondWithError(
-   errorMessage: string,
-   statusCode: number
-): NextResponse {
-   return NextResponse.json({ error: errorMessage }, { status: statusCode })
-}
 
 export const POST = withErrorHandler(
    async (request: NextRequest): Promise<NextResponse> => {
@@ -54,8 +47,8 @@ export const PATCH = withErrorHandler(
    }
 )
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
-   try {
+export const GET = withErrorHandler(
+   async (request: NextRequest): Promise<NextResponse> => {
       const url = new URL(request.url)
       const { page, limit } = handeGetPaginationParams(url)
       const filter = url.searchParams.get('filter') || ''
@@ -77,30 +70,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
          },
          { status: 200 }
       )
-   } catch (error) {
-      return respondWithError('Error get excel items', 500)
    }
-}
+)
 
-export async function DELETE(request: NextRequest): Promise<NextResponse> {
-   try {
+export const DELETE = withErrorHandler(
+   async (request: NextRequest): Promise<NextResponse> => {
       const { id } = await request.json()
+      const result = await handleDeleteItem(prismaExcelRepository, Number(id))
 
-      if (!id) {
-         return respondWithError('ID required', 400)
-      }
-
-      const deletedItem = await handleRemoveExcelItemById(Number(id))
-
-      if (!deletedItem) {
-         return respondWithError('ID not found', 404)
+      if (result.error) {
+         throw new Error(result.error)
       }
 
       return NextResponse.json(
-         { message: 'Item removed successfully', id: deletedItem.id },
+         { message: 'Item removed successfully', id: result.id },
          { status: 200 }
       )
-   } catch (error) {
-      return respondWithError('Error while removing excel item', 500)
    }
-}
+)

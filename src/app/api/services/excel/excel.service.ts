@@ -144,3 +144,17 @@ export async function handleRemoveExcelItemById(id: number) {
 
    return deletedItem
 }
+
+export async function handleDeleteItem(repo: ExcelRepository, id: number) {
+   if (!id) {
+      return { error: 'ID required', status: 400 }
+   }
+
+   const deletedItem = await repo.findById(id)
+   if (!deletedItem) {
+      return { error: 'ID not found', status: 404 }
+   }
+
+   await repo.delete(id)
+   return { id }
+}
