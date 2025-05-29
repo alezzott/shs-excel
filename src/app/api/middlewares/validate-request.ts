@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import { ZodSchema } from 'zod'
 
 export function validateRequest<T>(
-   schema: ZodSchema<T>,
-   data: Excel[]
+   schema: ZodSchema<T, any, any>,
+   data: unknown
 ): { valid: true; data: T } | { valid: false; response: NextResponse } {
    const parsed = schema.safeParse(data)
    if (!parsed.success) {

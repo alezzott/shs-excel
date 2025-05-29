@@ -24,10 +24,8 @@ export const POST = withErrorHandler(
       const formData = await request.formData()
       const fileEntry = formData.get('file')
 
-      const validation = uploadExcelSchema.safeParse({ file: fileEntry })
-      if (!validation.success) {
-         return respondWithError(validation.error.errors[0].message, 400)
-      }
+      const validation = validateRequest(uploadExcelSchema, { file: fileEntry })
+      if (!validation.valid) return validation.response
 
       const file = validation.data.file
       await handleUploadExcel(file, prismaExcelRepository)
@@ -43,10 +41,7 @@ export const PATCH = withErrorHandler(
 
       const result = await updateExcelItemService(prismaExcelRepository, data)
       if (result.error) {
-         return NextResponse.json(
-            { error: result.error },
-            { status: result.status }
-         )
+         throw new Error(result.error)
       }
 
       return NextResponse.json(
@@ -54,7 +49,7 @@ export const PATCH = withErrorHandler(
             message: 'Item atualizado com sucesso',
             item: result.item,
          },
-         { status: 200 }
+         { status: 204 }
       )
    }
 )
