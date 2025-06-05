@@ -332,6 +332,7 @@ export function TableExcelItem() {
             selectedCount={selectedCount}
             onDeleteSelected={() => setOpenDeleteDialog(true)}
             onClearSelection={() => setRowSelection({})}
+            onSelectedRows={selectedRows}
          />
          <DeleteSelectedDialog
             open={openDeleteDialog}

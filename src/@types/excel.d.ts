@@ -16,6 +16,10 @@ interface ExcelProps {
    }
 }
 
+type SelectedRow = {
+   original: ExcelItem
+}
+
 type FetchParams = {
    currentPage: number
    pageSize: number
