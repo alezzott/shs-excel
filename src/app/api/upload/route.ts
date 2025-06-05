@@ -42,7 +42,7 @@ export const PATCH = withErrorHandler(
             message: 'Item atualizado com sucesso',
             item: result.item,
          },
-         { status: 204 }
+         { status: 201 }
       )
    }
 )
