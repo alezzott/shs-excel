@@ -61,12 +61,15 @@ export function TablePagination({
             <PaginationContent>
                <PaginationItem>
                   <PaginationPrevious
+                     href="/"
                      aria-disabled={!canPreviousPage}
-                     onClick={onPreviousPage}
-                     href="#"
+                     onClick={(e) => {
+                        e.preventDefault()
+                        onPreviousPage()
+                     }}
                      tabIndex={!canPreviousPage ? -1 : 0}
                      className={
-                        'hover:bg-neutral-200' +
+                        'border border-gray-300 hover:bg-white' +
                         (!canPreviousPage
                            ? ' cursor-not-allowed opacity-50'
                            : '')
@@ -81,9 +84,12 @@ export function TablePagination({
                   ) : (
                      <PaginationItem key={page}>
                         <PaginationLink
-                           href="#"
                            isActive={pageIndex === page}
-                           onClick={() => onPageChange(page)}
+                           onClick={(e) => {
+                              e.preventDefault()
+                              onPageChange(page)
+                           }}
+                           href="/"
                         >
                            {page + 1}
                         </PaginationLink>
@@ -92,12 +98,15 @@ export function TablePagination({
                )}
                <PaginationItem>
                   <PaginationNext
-                     onClick={onNextPage}
+                     onClick={(e) => {
+                        e.preventDefault()
+                        onNextPage()
+                     }}
                      aria-disabled={!canNextPage}
-                     href="#"
+                     href="/"
                      tabIndex={!canNextPage ? -1 : 0}
                      className={
-                        'hover:bg-neutral-200' +
+                        'border border-gray-300 hover:bg-white' +
                         (!canNextPage ? ' cursor-not-allowed opacity-50' : '')
                      }
                   />

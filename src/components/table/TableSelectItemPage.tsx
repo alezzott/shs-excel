@@ -29,7 +29,7 @@ export function TableSelectItemPage({
                setPageIndex(0)
             }}
          >
-            <SelectTrigger className="w-auto">
+            <SelectTrigger className="w-auto bg-white">
                <SelectValue />
             </SelectTrigger>
             <SelectContent>

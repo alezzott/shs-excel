@@ -51,6 +51,9 @@ function PaginationLink({
 }: PaginationLinkProps) {
    return (
       <Link
+         onClick={(e) => {
+            e.preventDefault()
+         }}
          aria-current={isActive ? 'page' : undefined}
          data-slot="pagination-link"
          data-active={isActive}
