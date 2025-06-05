@@ -302,26 +302,31 @@ export function TableExcelItem() {
             </Table>
          </section>
          <section className="my-8 flex flex-row items-center">
-            <section className="flex-1 text-sm text-gray-500">
-               {table.getFilteredSelectedRowModel().rows.length} de{' '}
-               {table.getFilteredRowModel().rows.length} coluna(s) selecionadas
-            </section>
-            <section className="flex flex-row gap-2 max-lg:flex-col">
-               <TableSelectItemPage
-                  pageSize={pageSize}
-                  setPageSize={setPageSize}
-                  setPageIndex={setPageIndex}
-               />
-               <TablePagination
-                  pageCount={table.getPageCount()}
-                  pageIndex={table.getState().pagination.pageIndex}
-                  canPreviousPage={table.getCanPreviousPage()}
-                  canNextPage={table.getCanNextPage()}
-                  onPageChange={table.setPageIndex}
-                  onPreviousPage={table.previousPage}
-                  onNextPage={table.nextPage}
-               />
-            </section>
+            {filteredRows.length > 0 && (
+               <>
+                  <section className="flex-1 text-sm text-gray-500">
+                     {table.getFilteredSelectedRowModel().rows.length} de{' '}
+                     {table.getFilteredRowModel().rows.length} coluna(s)
+                     selecionadas
+                  </section>
+                  <section className="flex flex-row gap-2 max-lg:flex-col">
+                     <TableSelectItemPage
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                        setPageIndex={setPageIndex}
+                     />
+                     <TablePagination
+                        pageCount={table.getPageCount()}
+                        pageIndex={table.getState().pagination.pageIndex}
+                        canPreviousPage={table.getCanPreviousPage()}
+                        canNextPage={table.getCanNextPage()}
+                        onPageChange={table.setPageIndex}
+                        onPreviousPage={table.previousPage}
+                        onNextPage={table.nextPage}
+                     />
+                  </section>
+               </>
+            )}
          </section>
          <TableActionBar
             selectedCount={selectedCount}
