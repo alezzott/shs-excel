@@ -304,12 +304,12 @@ export function TableExcelItem() {
          <section className="my-8 flex flex-row items-center">
             {filteredRows.length > 0 && (
                <>
-                  <section className="flex-1 text-sm text-gray-500">
+                  <section className="flex-1 text-sm text-[#252525]">
                      {table.getFilteredSelectedRowModel().rows.length} de{' '}
                      {table.getFilteredRowModel().rows.length} coluna(s)
                      selecionadas
                   </section>
-                  <section className="flex flex-row gap-2 max-lg:flex-col">
+                  <section className="flex flex-row gap-8 max-lg:flex-col">
                      <TableSelectItemPage
                         pageSize={pageSize}
                         setPageSize={setPageSize}
@@ -320,7 +320,6 @@ export function TableExcelItem() {
                         pageIndex={table.getState().pagination.pageIndex}
                         canPreviousPage={table.getCanPreviousPage()}
                         canNextPage={table.getCanNextPage()}
-                        onPageChange={table.setPageIndex}
                         onPreviousPage={table.previousPage}
                         onNextPage={table.nextPage}
                      />

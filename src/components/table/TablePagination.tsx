@@ -1,9 +1,7 @@
 import {
    Pagination,
    PaginationContent,
-   PaginationEllipsis,
    PaginationItem,
-   PaginationLink,
    PaginationNext,
    PaginationPrevious,
 } from '../ui/pagination'
@@ -13,35 +11,8 @@ interface TablePaginationProps {
    pageIndex: number
    canPreviousPage: boolean
    canNextPage: boolean
-   onPageChange: (page: number) => void
    onPreviousPage: () => void
    onNextPage: () => void
-}
-
-export function handlePaginationRange(
-   pageCount: number,
-   pageIndex: number,
-   siblingCount = 1
-): (number | 'dots')[] {
-   const totalPage = siblingCount * 2 + 5
-   if (pageCount <= totalPage) {
-      return Array.from({ length: pageCount }, (_, i) => i)
-   }
-
-   const startPage = Math.max(pageIndex - siblingCount, 1)
-   const endPage = Math.min(pageIndex + siblingCount, pageCount - 2)
-   const range: (number | 'dots')[] = [0]
-
-   startPage > 1 ? range.push('dots') : null
-
-   for (let i = startPage; i <= endPage; i++) {
-      range.push(i)
-   }
-
-   endPage < pageCount - 2 ? range.push('dots') : null
-
-   range.push(pageCount - 1)
-   return range
 }
 
 export function TablePagination({
@@ -49,14 +20,16 @@ export function TablePagination({
    pageIndex,
    canPreviousPage,
    canNextPage,
-   onPageChange,
    onPreviousPage,
    onNextPage,
 }: TablePaginationProps) {
-   const range = handlePaginationRange(pageCount, pageIndex)
-
    return (
-      <section>
+      <section className="flex flex-row items-center gap-8">
+         <article>
+            <h1 className="text-sm text-nowrap text-[#252525]">
+               Página <b>{pageIndex + 1}</b> de <b>{pageCount}</b>
+            </h1>
+         </article>
          <Pagination>
             <PaginationContent>
                <PaginationItem>
@@ -76,26 +49,6 @@ export function TablePagination({
                      }
                   />
                </PaginationItem>
-               {range.map((page, idx) =>
-                  page === 'dots' ? (
-                     <PaginationItem key={`dot-${idx}`}>
-                        <PaginationEllipsis />
-                     </PaginationItem>
-                  ) : (
-                     <PaginationItem key={page}>
-                        <PaginationLink
-                           isActive={pageIndex === page}
-                           onClick={(e) => {
-                              e.preventDefault()
-                              onPageChange(page)
-                           }}
-                           href="/"
-                        >
-                           {page + 1}
-                        </PaginationLink>
-                     </PaginationItem>
-                  )
-               )}
                <PaginationItem>
                   <PaginationNext
                      onClick={(e) => {

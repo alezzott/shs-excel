@@ -21,7 +21,7 @@ export function TableSelectItemPage({
 
    return (
       <section className="flex items-center gap-2">
-         <span className="text-sm text-gray-500">Itens por página:</span>
+         <span className="text-sm text-[#252525]">Itens por página:</span>
          <Select
             value={String(pageSize)}
             onValueChange={(value) => {
