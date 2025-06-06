@@ -23,7 +23,7 @@ import {
 import { useFetch } from '@/hooks/useFetch'
 import { useDelete } from '@/hooks/useDelete'
 import { ModalDetailsItem } from '../modal/ModalDetailsItem'
-import { formatToBRL } from '@/app/api/utils/format-currency'
+import { formatToBRL } from '@/app/shared/utils/format-currency'
 import { Trash, X } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useDebounce } from 'use-debounce'

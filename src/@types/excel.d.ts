@@ -2,7 +2,7 @@ interface Excel {
    id: number
    code: string
    description: string
-   quantity?: string | number
+   quantity?: string | number | null
    price?: string | number
    total_price: number
    created_at: Date

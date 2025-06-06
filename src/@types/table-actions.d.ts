@@ -5,6 +5,7 @@ type TableActionBarProps = {
    onDeleteSelected?: () => void
    onClearSelection?: () => void
    onExportSelected?: () => void
+   onEditingSelected?: () => void
    children?: React.ReactNode
    onSelectedRows?: Row<Excel>[]
 }

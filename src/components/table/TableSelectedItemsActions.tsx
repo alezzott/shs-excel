@@ -1,4 +1,4 @@
-import { FileDown, Trash2, X } from 'lucide-react'
+import { FileDown, SquarePen, Trash2, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import React from 'react'
 import { TableActionBarProps } from '@/@types/table-actions'
@@ -8,6 +8,7 @@ export function TableSelectedItemsActions({
    onClearSelection,
    onDeleteSelected,
    onExportSelected,
+   onEditingSelected,
 }: TableActionBarProps) {
    if (selectedCount === 0) return null
 
@@ -51,6 +52,18 @@ export function TableSelectedItemsActions({
                   aria-label="Exportar selecionados"
                >
                   <FileDown className="h-5 w-5" />
+               </Button>
+            )}
+            {onEditingSelected && (
+               <Button
+                  className="bg-orange-400 hover:bg-orange-500"
+                  size="icon"
+                  onClick={onEditingSelected}
+                  title="Editar selecionados"
+                  aria-label="editar selecionados"
+                  color="orange"
+               >
+                  <SquarePen className="h-5 w-5" />
                </Button>
             )}
          </section>

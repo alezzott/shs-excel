@@ -1,6 +1,8 @@
 import { TableActionBarProps } from '@/@types/table-actions'
 import { TableSelectedItemsActions } from './TableSelectedItemsActions'
 import * as XLSX from 'xlsx'
+import { BatchEditModal } from './BatchEditModal'
+import { useState } from 'react'
 
 export function TableActionBar({
    selectedCount,
@@ -9,6 +11,14 @@ export function TableActionBar({
    children,
    onSelectedRows,
 }: TableActionBarProps) {
+   const [editModalOpen, setEditModalOpen] = useState(false)
+   const [editIndex, setEditIndex] = useState(0)
+
+   const handleEditSelected = () => {
+      setEditIndex(0)
+      setEditModalOpen(true)
+   }
+
    const handleExportSelected = () => {
       if (!onSelectedRows || onSelectedRows.length === 0) return
 
@@ -45,8 +55,21 @@ export function TableActionBar({
             onClearSelection={onClearSelection}
             onDeleteSelected={onDeleteSelected}
             onExportSelected={handleExportSelected}
+            onEditingSelected={handleEditSelected}
          />
          {children}
+
+         {editModalOpen && onSelectedRows && onSelectedRows.length > 0 && (
+            <BatchEditModal
+               items={onSelectedRows.map((row) => row.original)}
+               open={editModalOpen}
+               index={editIndex}
+               onClose={() => setEditModalOpen(false)}
+               onNext={() => setEditIndex((i) => i + 1)}
+               onPrevious={() => setEditIndex((i) => i - 1)}
+               onFinish={() => setEditModalOpen(false)}
+            />
+         )}
       </main>
    )
 }

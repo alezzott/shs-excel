@@ -1,9 +1,9 @@
 import { ModalPatchInput } from '@/validators/modal-schema'
 import { ExcelRepository } from '../../repository/excel-repository'
 import client from '../../lib/prisma/client'
-import { handleReadExcelData } from '../../utils/read-excel-data'
+import { handleReadExcelData } from '../../../shared/utils/read-excel-data'
 import { Prisma } from '@prisma/client'
-import { formatItemsDate } from '../../utils/format-data'
+import { formatItemsDate } from '../../../shared/utils/format-data'
 
 export async function updateExcelItemService(
    repo: ExcelRepository,

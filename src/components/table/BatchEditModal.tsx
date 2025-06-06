@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { usePatch } from '@/hooks/usePatch'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,9 +19,25 @@ import { toast } from 'sonner'
 import { Button } from '../ui/button'
 import { Edit, Loader2 } from 'lucide-react'
 import { Form } from '../ui/form'
+import {
+   filterFields,
+   handleUpdateItemAtIndex,
+} from '@/app/shared/utils/allowed-fields'
 
-export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
-   const [open, setOpen] = useState(false)
+export function BatchEditModal({
+   items,
+   open,
+   index,
+   onClose,
+   onNext,
+   onPrevious,
+   onFinish,
+}: BatchEditModalProps) {
+   const item = items[index]
+   const isFirst = index === 0
+   const isLast = index === items.length - 1
+
+   const [editedItems, setEditedItems] = useState(items)
    const { mutateAsync: updateMutation, isPending } = usePatch()
 
    const methods = useForm<ModalPatchInput>({
@@ -34,28 +50,49 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
       formState: { errors, isDirty },
    } = methods
 
-   const handleUpdate = async (data: any) => {
-      const updatedItem = {
+   useEffect(() => {
+      methods.reset({
          id: item.id,
-         ...data,
-      }
+         description: item.description,
+         quantity: item.quantity as number,
+         price: item.price as number,
+      })
+   }, [item, methods])
+
+   const handleLocaleSave = useCallback(() => {
+      const data = methods.getValues()
+      setEditedItems((prev) => handleUpdateItemAtIndex(prev, index, data))
+   }, [index, methods])
+
+   const handleNavigateItem = async (navigate: () => void) => {
+      const valid = await methods.trigger()
+      if (!valid) return
+      handleLocaleSave()
+      navigate()
+   }
+
+   const handleUpdate = async () => {
+      const valid = await methods.trigger()
+      if (!valid) return
+
+      const data = methods.getValues()
+      const updatedItems = handleUpdateItemAtIndex(editedItems, index, data)
+      const itemsToSend = updatedItems.map(filterFields)
 
       try {
-         await updateMutation(updatedItem)
-         onUpdateSuccess()
-         toast.success('Atualizado com sucesso !')
-      } catch (error) {
-         toast.error('Erro ao tentar atualizar o item, tente novamente')
+         await Promise.all(itemsToSend.map((item) => updateMutation(item)))
+         toast.success('Todos os itens atualizados com sucesso!')
+         onFinish()
+      } catch {
+         toast.error('Erro ao atualizar os itens.')
       }
-      setOpen(false)
    }
 
    return (
       <>
-         <Dialog open={open} onOpenChange={setOpen} modal={true}>
+         <Dialog open={open} onOpenChange={(v) => !v && onClose()} modal>
             <DialogTrigger asChild>
                <Button
-                  onClick={() => setOpen(true)}
                   variant="outline"
                   className="group border-green-500 text-green-600 hover:bg-green-500"
                   type="button"
@@ -158,26 +195,48 @@ export function ModalDetailsItem({ item, onUpdateSuccess }: ModalProps) {
                         />
                      </section>
                      <DialogFooter>
+                        {!isFirst && (
+                           <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => handleNavigateItem(onPrevious)}
+                              disabled={isPending}
+                           >
+                              Anterior
+                           </Button>
+                        )}
+                        {!isLast ? (
+                           <Button
+                              type="button"
+                              className="flex items-center justify-center bg-green-500 text-white hover:bg-green-600"
+                              onClick={() => handleNavigateItem(onNext)}
+                              disabled={isPending || !isDirty}
+                           >
+                              Próximo
+                           </Button>
+                        ) : (
+                           <Button
+                              type="submit"
+                              className="flex items-center justify-center bg-green-500 text-white hover:bg-green-600"
+                              onClick={handleUpdate}
+                              disabled={isPending || !isDirty}
+                           >
+                              {isPending && (
+                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              )}
+                              Finalizar
+                           </Button>
+                        )}
                         <DialogClose asChild>
                            <Button
                               type="button"
                               variant="outline"
                               disabled={isPending}
-                              onClick={() => setOpen(false)}
+                              onClick={onClose}
                            >
                               Cancelar
                            </Button>
                         </DialogClose>
-                        <Button
-                           type="submit"
-                           className="flex items-center justify-center bg-green-500 text-white hover:bg-green-600"
-                           disabled={!isDirty || isPending}
-                        >
-                           {isPending && (
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                           )}
-                           Salvar
-                        </Button>
                      </DialogFooter>
                   </form>
                </Form>
