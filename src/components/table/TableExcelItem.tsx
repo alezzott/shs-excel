@@ -321,6 +321,7 @@ export function TableExcelItem() {
                         canPreviousPage={table.getCanPreviousPage()}
                         canNextPage={table.getCanNextPage()}
                         onPreviousPage={table.previousPage}
+                        onPageChange={table.setPageIndex}
                         onNextPage={table.nextPage}
                      />
                   </section>
